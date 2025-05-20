@@ -2,13 +2,16 @@ import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import theme from "../../../theme";
 import { useEffect, useState } from "react";
+import { PieChart } from "@mui/icons-material";
 
 export const HomeLoanCalculator = () => {
-  const [tenure, setTenure] = useState(1);
+  const [tenure, setTenure] = useState<number>(1);
   const [principalAmount, setPrincipalAmount] = useState(20000);
   const [interest, setInterest] = useState(5);
+  const [loanEmi, setLoanEmi] = useState<number>();
 
   useEffect(() => {
+    console.log("use effect ran");
     calculateEmi();
   }, [tenure, principalAmount, interest]);
 
@@ -18,9 +21,11 @@ export const HomeLoanCalculator = () => {
     let numberOfMonths = tenure * 12;
     let emi = (principal * roi) / (1 - Math.pow(1 + interest, -numberOfMonths));
     console.log("emi value", emi);
+    setLoanEmi(emi);
   };
 
   const handleTenure = (event: any) => {
+    console.log("tenure", event.target.value);
     setTenure(event.target.value);
   };
 
@@ -67,23 +72,23 @@ export const HomeLoanCalculator = () => {
     },
   };
 
-  // const pieChartStyle = {
-  //   padding: 3,
-  // };
+  const pieChartStyle = {
+    padding: 3,
+  };
 
-  // const calculatedBlockStyle = {
-  //   padding: 3,
-  //   marginLeft: 2,
-  //   marginRight: 4,
-  //   background: theme.palette.primary.contrastText,
-  //   color: theme.palette.secondary.contrastText,
-  //   borderRadius: 3,
-  // };
+  const calculatedBlockStyle = {
+    padding: 3,
+    marginLeft: 2,
+    marginRight: 4,
+    background: theme.palette.primary.contrastText,
+    color: theme.palette.secondary.contrastText,
+    borderRadius: 3,
+  };
 
-  // const calculatedHeadingStyle = {
-  //   fontFamily: "Montserrat-Bold",
-  //   color: theme.palette.secondary.contrastText,
-  // };
+  const calculatedHeadingStyle = {
+    fontFamily: "Montserrat-Bold",
+    color: theme.palette.secondary.contrastText,
+  };
 
   const rupeeSymbolStyle = {
     fontSize: 15,
@@ -91,25 +96,25 @@ export const HomeLoanCalculator = () => {
     padding: 0,
   };
 
-  // const rupeeResultSymbolStyle = {
-  //   fontSize: 16,
-  //   marginTop: "auto",
-  //   marginBottom: "auto",
-  // };
+  const rupeeResultSymbolStyle = {
+    fontSize: 16,
+    marginTop: "auto",
+    marginBottom: "auto",
+  };
 
   const inputBlockStyle = {
     marginBottom: 5,
   };
 
-  // const submitButton = {
-  //   color: theme.palette.secondary.contrastText,
-  //   borderRadius: 15,
-  //   textTransform: "none",
-  // };
+  const submitButton = {
+    color: theme.palette.secondary.contrastText,
+    borderRadius: 15,
+    textTransform: "none",
+  };
 
-  // const buttonPlacement = {
-  //   marginLeft: "auto",
-  // };
+  const buttonPlacement = {
+    marginLeft: "auto",
+  };
 
   const headerStyle = {
     fontFamily: "Montserrat-Bold",
@@ -126,7 +131,7 @@ export const HomeLoanCalculator = () => {
         <Typography sx={headerStyle} color={theme.palette.primary.contrastText}>
           EMI Calculator
         </Typography>
-        <Grid sx={inputBlockStyle}>
+        <Grid size={{ md: 7 }} sx={inputBlockStyle}>
           <Grid container>
             <Grid>
               <Typography mr={2} align="right">
@@ -278,18 +283,18 @@ export const HomeLoanCalculator = () => {
           </Stack>
         </Grid>
       </Grid>
-      {/* <Grid item md={5}>
-        <Grid item container>
+      <Grid size={{ md: 5 }}>
+        <Grid container>
           <PieChart
             colors={[theme.palette.primary.main, theme.palette.secondary.main]}
             sx={pieChartStyle}
             series={[
               {
                 data: [
-                  { id: 0, value: eligibleLoan, label: "Loan Amount" },
+                  { id: 0, value: principalAmount, label: "Loan Amount" },
                   {
                     id: 1,
-                    value: calculatedInterest,
+                    value: interest,
                     label: "Interest on Loan",
                   },
                 ],
@@ -328,40 +333,40 @@ export const HomeLoanCalculator = () => {
             </Typography>
           </Grid>
           <Grid container>
-            <Grid size={{md: 7}}>
-              <Typography>Eligible EMI : </Typography>
+            <Grid size={{ md: 7 }}>
+              <Typography>Total Interest : </Typography>
             </Grid>
-            <Grid size={{md: 3}}>
+            <Grid size={{ md: 3 }}>
               <Stack direction="row">
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography>{eligibleEmi}</Typography>
+                <Typography>{interest}</Typography>
               </Stack>
             </Grid>
           </Grid>
           <Grid container>
-            <Grid md={7}>
+            <Grid size={{ md: 7 }}>
               <Typography>Principle Loan Amount : </Typography>
             </Grid>
-            <Grid item md={3}>
+            <Grid size={{ md: 3 }}>
               <Stack direction="row">
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography> {eligibleLoan}</Typography>
+                <Typography> {principalAmount}</Typography>
               </Stack>
             </Grid>
           </Grid>
-          <Grid container item>
-            <Grid item md={7}>
-              <Typography>Interest : </Typography>
+          <Grid container>
+            <Grid size={{ md: 7 }}>
+              <Typography>EMI Value : </Typography>
             </Grid>
-            <Grid item md={3}>
+            <Grid size={{ md: 3 }}>
               <Stack direction="row">
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography>{calculatedInterest}</Typography>
+                <Typography>{loanEmi}</Typography>
               </Stack>
             </Grid>
           </Grid>
         </Grid>
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 };

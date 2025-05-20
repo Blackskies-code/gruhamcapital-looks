@@ -1,21 +1,21 @@
 @font-face {
   font-family: "BiomeW01-Light";
-  src: url("Assets/font/BiomeW01-Light.ttf") format("truetype");
+  src: url("assets/font/BiomeW01-Light.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "BiomeW01-SemiBold";
-  src: url("Assets/font/BiomeW01-SemiBold.ttf") format("truetype");
+  src: url("assets/font/BiomeW01-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Montserrat-Medium";
-  src: url("Assets/font/Montserrat-Medium.ttf") format("truetype");
+  src: url("assets/font/Montserrat-Medium.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Montserrat-Bold";
-  src: url("Assets/font/Montserrat-Bold.ttf") format("truetype");
+  src: url("assets/font/Montserrat-Bold.ttf") format("truetype");
 }
 
 body {
