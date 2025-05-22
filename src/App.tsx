@@ -13,7 +13,7 @@ function App() {
         <HeaderNavBar />
         <Container>
           <Routes>
-            <Route path="/home" Component={Home} />
+            <Route path="/" Component={Home} />
           </Routes>
         </Container>
         <FooterBar />
