@@ -28,7 +28,7 @@ export const HomeLoanCalculator = () => {
       (principal * monthlyRoi * Math.pow(1 + monthlyRoi, tenureInMonths)) /
       (Math.pow(1 + monthlyRoi, tenureInMonths) - 1);
     setLoanEmi(roundToTwo(emi));
-    setTotalInterest(roundToTwo(emi * tenureInMonths));
+    setTotalInterest(roundToTwo((emi * tenureInMonths) - principalAmount));
   };
 
   const handleTenure = (event: any) => {
@@ -297,10 +297,24 @@ export const HomeLoanCalculator = () => {
           </Grid>
           <Grid container>
             <Grid size={{ md: 7 }}>
-              <Typography>Total Interest : </Typography>
+              <Typography>Total Amount</Typography>
+              <Typography variant="caption">(Loan + Interest)</Typography>
             </Grid>
             <Grid size={{ md: 3 }}>
               <Stack direction="row">
+                <Typography>:</Typography>
+                <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
+                <Typography>{totalInterest + principalAmount}</Typography>
+              </Stack>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid size={{ md: 7 }}>
+              <Typography>Interest</Typography>
+            </Grid>
+            <Grid size={{ md: 3 }}>
+              <Stack direction="row">
+                <Typography>:</Typography>
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
                 <Typography>{totalInterest}</Typography>
               </Stack>
@@ -308,10 +322,11 @@ export const HomeLoanCalculator = () => {
           </Grid>
           <Grid container>
             <Grid size={{ md: 7 }}>
-              <Typography>Principal Loan Amount : </Typography>
+              <Typography>Principal Loan Amount</Typography>
             </Grid>
             <Grid size={{ md: 3 }}>
               <Stack direction="row">
+                <Typography>:</Typography>
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
                 <Typography> {principalAmount}</Typography>
               </Stack>
@@ -319,10 +334,11 @@ export const HomeLoanCalculator = () => {
           </Grid>
           <Grid container>
             <Grid size={{ md: 7 }}>
-              <Typography>EMI Value : </Typography>
+              <Typography>EMI Value</Typography>
             </Grid>
             <Grid size={{ md: 3 }}>
               <Stack direction="row">
+                <Typography>:</Typography>
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
                 <Typography>{loanEmi}</Typography>
               </Stack>
