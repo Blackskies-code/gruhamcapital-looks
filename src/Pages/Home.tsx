@@ -7,7 +7,7 @@ export const Home = () => {
   return (
     <Box pt={5} pb={5}>
       <OnlineConsulationForm />
-      {/* <Calculators /> */}
+      <Calculators />
       <Comparison />
     </Box>
   );

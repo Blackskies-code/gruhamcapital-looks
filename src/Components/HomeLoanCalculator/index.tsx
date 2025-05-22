@@ -2,30 +2,36 @@ import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import theme from "../../../theme";
 import { useEffect, useState } from "react";
-import { PieChart } from "@mui/icons-material";
+import { PieChart } from "@mui/x-charts/PieChart";
 
 export const HomeLoanCalculator = () => {
   const [tenure, setTenure] = useState<number>(1);
   const [principalAmount, setPrincipalAmount] = useState(20000);
-  const [interest, setInterest] = useState(5);
-  const [loanEmi, setLoanEmi] = useState<number>();
+  const [roi, setRoi] = useState(5);
+  const [loanEmi, setLoanEmi] = useState<number | string>();
+  const [totalInterest, setTotalInterest] = useState<number>(0);
 
   useEffect(() => {
-    console.log("use effect ran");
     calculateEmi();
-  }, [tenure, principalAmount, interest]);
+  }, [principalAmount, roi, tenure]);
+
+  const roundToTwo = (num: number) => {
+    return Math.round(num * 100) / 100;
+  };
 
   const calculateEmi = () => {
-    let principal = principalAmount;
-    let roi = interest / 12 / 100; // 8.5%/12 - per month interest
-    let numberOfMonths = tenure * 12;
-    let emi = (principal * roi) / (1 - Math.pow(1 + interest, -numberOfMonths));
-    console.log("emi value", emi);
-    setLoanEmi(emi);
+    let principal: any = principalAmount;
+    let monthlyRoi: any = roi / 12 / 100; // 8.5%/12 - per month interest
+    let tenureInMonths: any = tenure * 12;
+
+    const emi =
+      (principal * monthlyRoi * Math.pow(1 + monthlyRoi, tenureInMonths)) /
+      (Math.pow(1 + monthlyRoi, tenureInMonths) - 1);
+    setLoanEmi(roundToTwo(emi));
+    setTotalInterest(roundToTwo(emi * tenureInMonths));
   };
 
   const handleTenure = (event: any) => {
-    console.log("tenure", event.target.value);
     setTenure(event.target.value);
   };
 
@@ -34,13 +40,13 @@ export const HomeLoanCalculator = () => {
   };
 
   const handleInterest = (event: any) => {
-    setInterest(event.target.value);
+    setRoi(event.target.value);
   };
 
   const boxStyle = {
     background: theme.palette.secondary.contrastText,
     marginBottom: 5,
-    padding: 0,
+    padding: 5,
   };
 
   const PrettoSlider = {
@@ -83,6 +89,7 @@ export const HomeLoanCalculator = () => {
     background: theme.palette.primary.contrastText,
     color: theme.palette.secondary.contrastText,
     borderRadius: 3,
+    marginBottom: 3,
   };
 
   const calculatedHeadingStyle = {
@@ -129,9 +136,9 @@ export const HomeLoanCalculator = () => {
     <Grid container sx={containerGrid}>
       <Grid size={{ md: 7 }} sx={boxStyle}>
         <Typography sx={headerStyle} color={theme.palette.primary.contrastText}>
-          EMI Calculator
+          Home Loan Calculator
         </Typography>
-        <Grid size={{ md: 7 }} sx={inputBlockStyle}>
+        <Grid sx={inputBlockStyle}>
           <Grid container>
             <Grid>
               <Typography mr={2} align="right">
@@ -163,7 +170,7 @@ export const HomeLoanCalculator = () => {
               onChange={handlePrincipalAmount}
               sx={PrettoSlider}
               min={10000}
-              max={1000000}
+              max={100000000}
             />
             <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
             <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
@@ -206,47 +213,6 @@ export const HomeLoanCalculator = () => {
           </Stack>
         </Grid>
 
-        {/* <Grid sx={inputBlockStyle}>
-          <Grid container>
-            <Grid>
-              <Typography mr={2} align="right">
-                Existing Monthly EMIs :
-              </Typography>
-            </Grid>
-            <Grid sx={{ marginLeft: "auto", marginRight: 0 }}>
-              <Stack direction="row">
-                <CurrencyRupeeIcon />
-                <TextField
-                  required
-                  variant="standard"
-                  onChange={handleExistingEmi}
-                  inputProps={{
-                    type: "number",
-                  }}
-                  value={existingEmi}
-                  sx={{ width: "100%" }}
-                />
-              </Stack>
-            </Grid>
-          </Grid>
-
-          <Stack direction="row" sx={{ alignItems: "center", mb: 1, mt: 1 }}>
-            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
-            <Slider
-              value={existingEmi}
-              valueLabelDisplay="auto"
-              onChange={handleExistingEmi}
-              sx={PrettoSlider}
-              min={0}
-              max={100000}
-              step={10}
-            />
-            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
-            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
-            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
-          </Stack>
-        </Grid> */}
-
         <Grid sx={inputBlockStyle}>
           <Grid container>
             <Grid>
@@ -264,7 +230,7 @@ export const HomeLoanCalculator = () => {
                   inputProps={{
                     type: "number",
                   }}
-                  value={interest}
+                  value={roi}
                   sx={{ width: "100%" }}
                 />
               </Stack>
@@ -272,7 +238,7 @@ export const HomeLoanCalculator = () => {
           </Grid>
           <Stack direction="row" sx={{ alignItems: "center", mb: 1, mt: 1 }}>
             <Slider
-              value={interest}
+              value={roi}
               valueLabelDisplay="auto"
               onChange={handleInterest}
               sx={PrettoSlider}
@@ -294,12 +260,12 @@ export const HomeLoanCalculator = () => {
                   { id: 0, value: principalAmount, label: "Loan Amount" },
                   {
                     id: 1,
-                    value: interest,
+                    value: totalInterest,
                     label: "Interest on Loan",
                   },
                 ],
                 innerRadius: 8,
-                outerRadius: 150,
+                outerRadius: 140,
                 paddingAngle: 4,
                 cornerRadius: 8,
                 highlightScope: { fade: "global", highlight: "item" },
@@ -310,18 +276,15 @@ export const HomeLoanCalculator = () => {
                 },
               },
             ]}
-            height={450}
+            height={400}
             margin={{ left: 50, right: 50 }}
             slotProps={{
               legend: {
-                direction: "row",
-                itemGap: 40,
+                direction: "horizontal",
                 position: {
-                  horizontal: "middle",
+                  horizontal: "center",
                   vertical: "bottom",
                 },
-                markGap: 10,
-                padding: 2,
               },
             }}
           />
@@ -339,13 +302,13 @@ export const HomeLoanCalculator = () => {
             <Grid size={{ md: 3 }}>
               <Stack direction="row">
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography>{interest}</Typography>
+                <Typography>{totalInterest}</Typography>
               </Stack>
             </Grid>
           </Grid>
           <Grid container>
             <Grid size={{ md: 7 }}>
-              <Typography>Principle Loan Amount : </Typography>
+              <Typography>Principal Loan Amount : </Typography>
             </Grid>
             <Grid size={{ md: 3 }}>
               <Stack direction="row">

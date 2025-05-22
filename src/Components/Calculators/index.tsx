@@ -28,7 +28,7 @@ export const Calculators = () => {
           variant="standard"
           sx={tabStyles}
         >
-          <Tab label="EMI Calculator" sx={tabStyles} />
+          <Tab label="Home Loan Calculator" sx={tabStyles} />
         </Tabs>
         {tabNumber === 0 && <HomeLoanCalculator />}
       </Box>
