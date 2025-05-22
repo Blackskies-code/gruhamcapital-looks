@@ -1,6 +1,5 @@
 import {
   Box,
-  Container,
   Table,
   TableBody,
   TableCell,
@@ -8,7 +7,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import theme from "../../../theme";
+import theme from "../../theme";
 import styles from "./style";
 
 function createData(feature: string, us: string, others: string) {
@@ -23,12 +22,12 @@ const Comparison = () => {
       "Processing Fee",
       unicodeRupeeSymbol + " 0 ",
       "0.25% + GST (" +
-        unicodeRupeeSymbol +
-        " 12,500 + " +
-        unicodeRupeeSymbol +
-        " 2,250 = " +
-        unicodeRupeeSymbol +
-        " 14,750 for 50 Lakhs)"
+      unicodeRupeeSymbol +
+      " 12,500 + " +
+      unicodeRupeeSymbol +
+      " 2,250 = " +
+      unicodeRupeeSymbol +
+      " 14,750 for 50 Lakhs)"
     ),
     createData(
       "CERSAI Charges",
@@ -77,14 +76,14 @@ const Comparison = () => {
     marginTop: 2,
   };
 
-  const cellFormatForUs = {
-    fontFamily: "Montserrat-Bold",
-    background: "#d9efe3",
-  };
+  // const cellFormatForUs = {
+  //   fontFamily: "Montserrat-Bold",
+  //   background: "#d9efe3",
+  // };
 
-  const cellFormatForOthers = {
-    background: "#ffefea",
-  };
+  // const cellFormatForOthers = {
+  //   background: "#ffefea",
+  // };
 
   const tableHeaderFormat = {
     fontFamily: "Montserrat-Bold",

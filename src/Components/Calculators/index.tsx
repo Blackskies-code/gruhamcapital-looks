@@ -1,11 +1,11 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import theme from "../../../theme";
+import theme from "../../theme";
 import { useState } from "react";
 import { HomeLoanCalculator } from "../HomeLoanCalculator";
 
 export const Calculators = () => {
   const [tabNumber, setTabNumber] = useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     console.log("value", newValue);
     setTabNumber(newValue);
   };

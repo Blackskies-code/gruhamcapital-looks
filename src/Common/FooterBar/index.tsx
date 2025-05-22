@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import theme from "../../../theme";
+import theme from "../../theme";
 
 const FooterBar = () => {
   const AppBarStyle = {
@@ -20,23 +20,23 @@ const FooterBar = () => {
     marginLeft: "auto",
   };
 
-  const socialMediaHandlesBlockStyle = {
-    marginTop: "auto",
-    marginBottom: "auto",
-    marginLeft: 1,
-  };
+  // const socialMediaHandlesBlockStyle = {
+  //   marginTop: "auto",
+  //   marginBottom: "auto",
+  //   marginLeft: 1,
+  // };
 
-  const socialMediaHandleIconStyle = {
-    fontSize: "2rem",
-    color: theme.palette.secondary.main,
-  };
+  // const socialMediaHandleIconStyle = {
+  //   fontSize: "2rem",
+  //   color: theme.palette.secondary.main,
+  // };
 
-  const instagramUrl =
-    "https://www.instagram.com/drift_hyd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
+  // const instagramUrl =
+  //   "https://www.instagram.com/drift_hyd?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==";
 
-  const socialMediaHandle = (url: string) => {
-    window.open(url, "_blank", "noreferrer");
-  };
+  // const socialMediaHandle = (url: string) => {
+  //   window.open(url, "_blank", "noreferrer");
+  // };
 
   return (
     <>

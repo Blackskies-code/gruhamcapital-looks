@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import theme from "../../../theme";
+import theme from "../../theme";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -48,6 +48,7 @@ export const OnlineConsulationForm = () => {
     const selectedDate = dayjs(event).format("MM/DD/YYYY");
     setDate(selectedDate);
     setLoading(true);
+    console.log(date)
     const data = await getScheduleForConsultation();
     setLoading(false);
     setConsultationSchedule([...data]);
@@ -94,9 +95,7 @@ export const OnlineConsulationForm = () => {
     marginLeft: "auto",
   };
 
-  const logoStyle = {
-    margin: "auto",
-  };
+
   const headerStyle = {
     fontSize: 35,
     fontFamily: "Montserrat-Bold",
@@ -224,7 +223,7 @@ export const OnlineConsulationForm = () => {
                   style={{ width: 160 }}
                   disabled={!consultationSchedule.length}
                 >
-                  {consultationSchedule?.map((schedule, ind) => {
+                  {consultationSchedule?.map((schedule, _) => {
                     return (
                       <MenuItem
                         value={schedule.time}

@@ -1,7 +1,7 @@
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
-import React from "react";
+
 import LogoImage from "../../assets/icon.png"
-import theme from "../../../theme";
+import theme from "../../theme";
 
 export default function HeaderNavBar() {
   const headerNameStyle = {
@@ -26,7 +26,7 @@ export default function HeaderNavBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" sx={AppBarStyle}>
         <Toolbar>
-          <img src={LogoImage} height="40" width="40"/>
+          <img src={LogoImage} height="40" width="40" />
           <Typography variant="h6" component="div" sx={headerNameStyle}>
             Gruham Capital
           </Typography>

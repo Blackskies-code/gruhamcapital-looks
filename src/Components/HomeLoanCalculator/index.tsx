@@ -1,6 +1,6 @@
 import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import theme from "../../../theme";
+import theme from "../../theme";
 import { useEffect, useState } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 
@@ -113,15 +113,15 @@ export const HomeLoanCalculator = () => {
     marginBottom: 5,
   };
 
-  const submitButton = {
-    color: theme.palette.secondary.contrastText,
-    borderRadius: 15,
-    textTransform: "none",
-  };
+  // const submitButton = {
+  //   color: theme.palette.secondary.contrastText,
+  //   borderRadius: 15,
+  //   textTransform: "none",
+  // };
 
-  const buttonPlacement = {
-    marginLeft: "auto",
-  };
+  // const buttonPlacement = {
+  //   marginLeft: "auto",
+  // };
 
   const headerStyle = {
     fontFamily: "Montserrat-Bold",

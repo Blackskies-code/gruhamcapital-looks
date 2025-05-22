@@ -1,5 +1,3 @@
-import { data } from "react-router";
-
 const getScheduleForConsultation = async () => {
   let apiData: any = [];
   //   api to fetch the available slots for a user to book
@@ -7,7 +5,7 @@ const getScheduleForConsultation = async () => {
     .then((res) => {
       return res.json();
     })
-    .then((res) => {
+    .then((_) => {
       const result = [
         {
           time: "11:00am",
@@ -37,7 +35,7 @@ const getScheduleForConsultation = async () => {
 };
 
 const timeoutFn = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, _) => {
     setTimeout(() => {
       console.log("timeout in promise");
       resolve("done");

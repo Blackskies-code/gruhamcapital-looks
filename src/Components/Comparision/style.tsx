@@ -1,4 +1,4 @@
-import theme from "../../../theme";
+import theme from "../../theme";
 
 const tableCellUs = {
   color: theme.palette.secondary.main,
