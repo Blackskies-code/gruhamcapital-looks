@@ -308,7 +308,7 @@ export const HomeLoanCalculator = () => {
                 faded: {
                   innerRadius: 10,
                   additionalRadius: -5,
-                  color: "lightgreen",
+                  color: "lightpurple",
                 },
               },
             ]}
