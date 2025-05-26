@@ -137,8 +137,8 @@ export const HomeLoanCalculator = () => {
 
   const headerStyleMobile = {
     fontFamily: "Montserrat-Bold",
-    fontSize: 24,
-    marginBottom: 2,
+    fontSize: 26,
+    marginBottom: 3,
   };
 
   const boxStyleMobile = {
