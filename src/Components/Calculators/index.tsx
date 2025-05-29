@@ -1,7 +1,10 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import theme from "../../theme";
 import { useState } from "react";
-import { HomeLoanCalculator } from "../HomeLoanCalculator";
+// import { HomeLoanCalculator } from "../HomeLoanCalculator";
+import { HomeLoanCalculatorMobile } from "../Mobile/HomeLoanCalculator/index";
+import { HomeLoanCalculatorWeb } from "../Web/HomeLoanCalculator/index";
+import LoanEligibilityCalculator from "../Mobile/LoanEligibilityCalculator";
 
 export const Calculators = () => {
   const [tabNumber, setTabNumber] = useState(0);
@@ -29,8 +32,19 @@ export const Calculators = () => {
           sx={tabStyles}
         >
           <Tab label="Home Loan Calculator" sx={tabStyles} />
+          <Tab label="Loan Eligibility Calculator" sx={tabStyles} />
         </Tabs>
-        {tabNumber === 0 && <HomeLoanCalculator />}
+        {tabNumber === 0 && (
+          <div>
+            <HomeLoanCalculatorMobile />
+            <HomeLoanCalculatorWeb />
+          </div>
+        )}
+        {tabNumber === 1 && (
+          <div>
+            <LoanEligibilityCalculator />
+          </div>
+        )}
       </Box>
     </>
   );
