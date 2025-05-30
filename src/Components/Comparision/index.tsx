@@ -105,8 +105,8 @@ const Comparison = () => {
       >
         Why Us ?
       </Typography>
-      <Grid overflow={"auto"}>
-        <Table sx={boxStyle} className="cardShadow">
+      <Grid overflow={"auto"} className="cardShadow">
+        <Table sx={boxStyle}>
           <TableHead sx={tableHeaderFormat}>
             <TableRow>
               <TableCell sx={styles.tableHeaderLedger}>Feature</TableCell>

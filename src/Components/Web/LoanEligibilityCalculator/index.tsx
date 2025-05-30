@@ -1,17 +1,8 @@
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Slider,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import theme from "../../../theme";
-import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import { PieChart } from "@mui/x-charts/PieChart";
 
 const LoanEligibilityCalculator = () => {
   const [monthlyNetIncome, setMonthlyNetIncome] = useState(20000);
@@ -58,6 +49,7 @@ const LoanEligibilityCalculator = () => {
       setEligibleEmi(0);
       setEligibleLoan(0);
       setIsEligibleForLoan(false);
+      setCalculatedInterest(0);
       console.log("values when greater than 40%");
     } else {
       // Convert annual interest rate to monthly
@@ -110,6 +102,8 @@ const LoanEligibilityCalculator = () => {
 
   const boxStyle = {
     padding: 5,
+    background: theme.palette.secondary.contrastText,
+    marginBottom: 5,
   };
 
   const pieChartStyle = {
@@ -122,6 +116,7 @@ const LoanEligibilityCalculator = () => {
     background: theme.palette.primary.contrastText,
     color: theme.palette.secondary.contrastText,
     borderRadius: 3,
+    marginBottom: 3,
   };
 
   const calculatedHeadingStyle = {
@@ -152,6 +147,22 @@ const LoanEligibilityCalculator = () => {
   };
   const containerGrid = {
     padding: 0,
+  };
+
+  const eligibilityBlockStyle = {
+    padding: 2,
+    marginLeft: 2,
+    marginRight: 4,
+    background: isEligibleForLoan ? "#4caf50" : "#b02b3b",
+    color: theme.palette.secondary.contrastText,
+    borderRadius: 3,
+    marginBottom: 1,
+  };
+
+  const eligibilityHeadingStyle = {
+    fontFamily: "Montserrat-Bold",
+    color: theme.palette.secondary.contrastText,
+    textAlign: "center",
   };
 
   return (
@@ -311,8 +322,15 @@ const LoanEligibilityCalculator = () => {
             />
           </Stack>
         </Grid>
+        <Grid sx={eligibilityBlockStyle}>
+          <Grid>
+            <Typography variant="h5" sx={eligibilityHeadingStyle}>
+              {isEligibleForLoan ? "Eligible" : "Not Eligible"}
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid size={{ md: 5 }}>
+      <Grid display={isEligibleForLoan ? "block" : "none"} size={{ md: 5 }}>
         <Grid container>
           <PieChart
             colors={[theme.palette.primary.main, theme.palette.secondary.main]}
@@ -360,16 +378,6 @@ const LoanEligibilityCalculator = () => {
             <Typography variant="h5" sx={calculatedHeadingStyle}>
               Calculated Loan
             </Typography>
-          </Grid>
-          <Grid container>
-            <Grid size={{ md: 7 }}>
-              <Typography>Loan Eligibility : </Typography>
-            </Grid>
-            <Grid size={{ md: 3 }}>
-              <Stack direction="row">
-                <Typography>{isEligibleForLoan ? "Yes" : "No"}</Typography>
-              </Stack>
-            </Grid>
           </Grid>
           <Grid container>
             <Grid size={{ md: 7 }}>

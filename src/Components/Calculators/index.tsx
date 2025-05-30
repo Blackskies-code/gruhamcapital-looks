@@ -4,7 +4,7 @@ import { useState } from "react";
 // import { HomeLoanCalculator } from "../HomeLoanCalculator";
 import { HomeLoanCalculatorMobile } from "../Mobile/HomeLoanCalculator/index";
 import { HomeLoanCalculatorWeb } from "../Web/HomeLoanCalculator/index";
-import LoanEligibilityCalculator from "../Mobile/LoanEligibilityCalculator";
+import LoanEligibilityCalculator from "../Web/LoanEligibilityCalculator";
 
 export const Calculators = () => {
   const [tabNumber, setTabNumber] = useState(0);

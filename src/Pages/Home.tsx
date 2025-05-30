@@ -5,7 +5,7 @@ import { Calculators } from "../Components/Calculators";
 
 export const Home = () => {
   return (
-    <Box pt={5} pb={5}>
+    <Box pt={10} pb={5}>
       <OnlineConsulationForm />
       <Calculators />
       <Comparison />
