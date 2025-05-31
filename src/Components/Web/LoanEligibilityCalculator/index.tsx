@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import theme from "../../../theme";
 import { PieChart } from "@mui/x-charts/PieChart";
 
-const LoanEligibilityCalculator = () => {
+const LoanEligibilityCalculatorWeb = () => {
   const [monthlyNetIncome, setMonthlyNetIncome] = useState(20000);
   const [eligibleLoan, setEligibleLoan] = useState(0);
   const [eligibleEmi, setEligibleEmi] = useState(0);
@@ -41,16 +41,16 @@ const LoanEligibilityCalculator = () => {
   };
 
   const calculateLoanEligibility = () => {
-    let maxEligibleEmi = monthlyNetIncome * 0.4;
+    let maxEligibleEmi = monthlyNetIncome * 0.65;
     maxEligibleEmi = monthlyNetIncome - existingEmi;
-    // Considering eligibility for loan is 40%
+    // Considering eligibility for loan is 65%
     if (existingEmi > maxEligibleEmi) {
-      // if the existing is greater than 40% defaulting the Emi & Loan to 0
+      // if the existing is greater than 65% defaulting the Emi & Loan to 0
       setEligibleEmi(0);
       setEligibleLoan(0);
       setIsEligibleForLoan(false);
       setCalculatedInterest(0);
-      console.log("values when greater than 40%");
+      console.log("values when greater than 65%");
     } else {
       // Convert annual interest rate to monthly
       const monthlyRoi = interest / 12 / 100;
@@ -323,6 +323,7 @@ const LoanEligibilityCalculator = () => {
           </Stack>
         </Grid>
         <Grid sx={eligibilityBlockStyle}>
+          {/* Display Pie Chart only if the user is eligible for Loan */}
           <Grid>
             <Typography variant="h5" sx={eligibilityHeadingStyle}>
               {isEligibleForLoan ? "Eligible" : "Not Eligible"}
@@ -418,4 +419,4 @@ const LoanEligibilityCalculator = () => {
   );
 };
 
-export default LoanEligibilityCalculator;
+export default LoanEligibilityCalculatorWeb;

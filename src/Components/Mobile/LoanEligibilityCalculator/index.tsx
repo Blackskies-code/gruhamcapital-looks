@@ -1,46 +1,74 @@
-import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import theme from "../../../theme";
+import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import theme from "../../../theme";
 import { PieChart } from "@mui/x-charts/PieChart";
 
-export const HomeLoanCalculatorMobile = () => {
-  const [tenure, setTenure] = useState<number>(1);
-  const [principalAmount, setPrincipalAmount] = useState(20000);
-  const [roi, setRoi] = useState(5);
-  const [loanEmi, setLoanEmi] = useState<number | string>();
-  const [totalInterest, setTotalInterest] = useState<number>(0);
+const LoanEligibilityCalculatorMobile = () => {
+  const [monthlyNetIncome, setMonthlyNetIncome] = useState(20000);
+  const [eligibleLoan, setEligibleLoan] = useState(0);
+  const [eligibleEmi, setEligibleEmi] = useState(0);
+  const [calculatedInterest, setCalculatedInterest] = useState(0);
+  const [existingEmi, setExistingEmi] = useState(0);
+  const [tenure, setTenure] = useState(1);
+  const [interest, setInterest] = useState(10);
+  const [isEligibleForLoan, setIsEligibleForLoan] = useState<boolean | null>(
+    null
+  );
 
-  useEffect(() => {
-    calculateEmi();
-  }, [principalAmount, roi, tenure]);
-
-  const roundToTwo = (num: number) => {
-    return Math.round(num * 100) / 100;
-  };
-
-  const calculateEmi = () => {
-    let principal: any = principalAmount;
-    let monthlyRoi: any = roi / 12 / 100; // 8.5%/12 - per month interest
-    let tenureInMonths: any = tenure * 12;
-
-    const emi =
-      (principal * monthlyRoi * Math.pow(1 + monthlyRoi, tenureInMonths)) /
-      (Math.pow(1 + monthlyRoi, tenureInMonths) - 1);
-    setLoanEmi(roundToTwo(emi));
-    setTotalInterest(roundToTwo(emi * tenureInMonths - principalAmount));
+  const handleMonthlyNetIncome = (event: any) => {
+    setMonthlyNetIncome(event.target.value);
   };
 
   const handleTenure = (event: any) => {
     setTenure(event.target.value);
   };
 
-  const handlePrincipalAmount = (event: any) => {
-    setPrincipalAmount(event.target.value);
+  const handleInterest = (event: any) => {
+    setInterest(event.target.value);
   };
 
-  const handleInterest = (event: any) => {
-    setRoi(event.target.value);
+  useEffect(() => {
+    calculateLoanEligibility();
+  }, [interest, tenure, monthlyNetIncome, existingEmi]);
+
+  const handleExistingEmi = (event: any) => {
+    setExistingEmi(event.target.value);
+  };
+
+  const roundToTwo = (num: number) => {
+    return Math.round(num * 100) / 100;
+  };
+
+  const calculateLoanEligibility = () => {
+    let maxEligibleEmi = monthlyNetIncome * 0.65;
+    maxEligibleEmi = monthlyNetIncome - existingEmi;
+    // Considering eligibility for loan is 65%
+    if (existingEmi > maxEligibleEmi) {
+      // if the existing is greater than 65% defaulting the Emi & Loan to 0
+      setEligibleEmi(0);
+      setEligibleLoan(0);
+      setIsEligibleForLoan(false);
+      setCalculatedInterest(0);
+      console.log("values when greater than 65%");
+    } else {
+      // Convert annual interest rate to monthly
+      const monthlyRoi = interest / 12 / 100;
+      // Convert Tenure in Months
+      const tenureInMonths = tenure * 12;
+      // Calculate Loan Amount
+      const loanAmount =
+        (maxEligibleEmi * (1 - Math.pow(1 + monthlyRoi, -tenureInMonths))) /
+        monthlyRoi;
+      // Calculate total Amount Repaid
+      const totalRepayment = maxEligibleEmi * tenureInMonths;
+      // Calculate total Interest Paid
+      const totalInterest = totalRepayment - loanAmount;
+      setEligibleLoan(roundToTwo(loanAmount));
+      setEligibleEmi(maxEligibleEmi);
+      setCalculatedInterest(roundToTwo(totalInterest));
+      setIsEligibleForLoan(true);
+    }
   };
 
   const PrettoSlider = {
@@ -72,8 +100,23 @@ export const HomeLoanCalculatorMobile = () => {
     },
   };
 
+  const boxStyleMobile = {
+    background: theme.palette.secondary.contrastText,
+    marginBottom: 1,
+    padding: 2,
+  };
+
   const pieChartStyle = {
     padding: 3,
+  };
+  const calculatedBlockStyleMobile = {
+    padding: 3,
+    marginLeft: 2,
+    marginRight: 2,
+    background: theme.palette.primary.contrastText,
+    color: theme.palette.secondary.contrastText,
+    borderRadius: 3,
+    marginBottom: 3,
   };
 
   const calculatedHeadingStyle = {
@@ -97,38 +140,29 @@ export const HomeLoanCalculatorMobile = () => {
     marginBottom: 5,
   };
 
-  // const submitButton = {
-  //   color: theme.palette.secondary.contrastText,
-  //   borderRadius: 15,
-  //   textTransform: "none",
-  // };
-
-  // const buttonPlacement = {
-  //   marginLeft: "auto",
-  // };
-
-  // Mobile View Styles
-
   const headerStyleMobile = {
     fontFamily: "Montserrat-Bold",
     fontSize: 26,
     marginBottom: 3,
   };
-
-  const boxStyleMobile = {
-    background: theme.palette.secondary.contrastText,
-    marginBottom: 1,
-    padding: 2,
+  const containerGrid = {
+    padding: 0,
   };
 
-  const calculatedBlockStyleMobile = {
-    padding: 3,
+  const eligibilityBlockStyle = {
+    padding: 2,
     marginLeft: 2,
-    marginRight: 2,
-    background: theme.palette.primary.contrastText,
+    marginRight: 4,
+    background: isEligibleForLoan ? "#4caf50" : "#b02b3b",
     color: theme.palette.secondary.contrastText,
     borderRadius: 3,
-    marginBottom: 3,
+    marginBottom: 1,
+  };
+
+  const eligibilityHeadingStyle = {
+    fontFamily: "Montserrat-Bold",
+    color: theme.palette.secondary.contrastText,
+    textAlign: "center",
   };
 
   const sliderHeadingMobile = {
@@ -137,7 +171,6 @@ export const HomeLoanCalculatorMobile = () => {
 
   return (
     <Grid container>
-      {/* Mobile View */}
       <Grid
         size={{ xs: 12 }}
         sx={{ display: { xs: "block", md: "none" }, ...boxStyleMobile }}
@@ -146,31 +179,27 @@ export const HomeLoanCalculatorMobile = () => {
           sx={headerStyleMobile}
           color={theme.palette.primary.contrastText}
         >
-          Home Loan Calculator
+          Loan Eligibility Calculator
         </Typography>
-        <Grid
-          sx={{
-            marginBottom: 2,
-          }}
-        >
+        <Grid sx={{ marginBottom: 2 }}>
           <Grid container>
-            <Grid size={{ xs: 7 }}>
+            <Grid size={{ xs: 8 }}>
               <Typography mr={1} align="left" sx={sliderHeadingMobile}>
-                Principal Amount :
+                Monthly Net Income :
               </Typography>
             </Grid>
-            <Grid size={{ xs: 5 }} sx={{ marginLeft: "auto", marginRight: 0 }}>
+            <Grid size={{ xs: 4 }} sx={{ marginLeft: "auto", marginRight: 0 }}>
               <Stack direction="row">
                 <CurrencyRupeeIcon />
                 <TextField
                   required
                   variant="standard"
-                  onChange={handlePrincipalAmount}
+                  onChange={handleMonthlyNetIncome}
                   inputProps={{
                     type: "number",
                   }}
-                  value={principalAmount}
-                  sx={{ width: "100%" }}
+                  value={monthlyNetIncome}
+                  sx={{ width: "80%" }}
                 />
               </Stack>
             </Grid>
@@ -179,12 +208,12 @@ export const HomeLoanCalculatorMobile = () => {
           <Stack direction="row" sx={{ alignItems: "center", mb: 1, mt: 1 }}>
             <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
             <Slider
-              value={principalAmount}
+              value={monthlyNetIncome}
               valueLabelDisplay="auto"
-              onChange={handlePrincipalAmount}
+              onChange={handleMonthlyNetIncome}
               sx={PrettoSlider}
               min={10000}
-              max={100000000}
+              max={1000000}
             />
             <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
             <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
@@ -231,12 +260,55 @@ export const HomeLoanCalculatorMobile = () => {
           <Grid container>
             <Grid size={{ xs: 6 }}>
               <Typography mr={1} align="left" sx={sliderHeadingMobile}>
+                Existing Monthly EMIs :
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 6 }} sx={{ marginLeft: "auto", marginRight: 0 }}>
+              <Stack direction="row">
+                <CurrencyRupeeIcon />
+                <TextField
+                  required
+                  variant="standard"
+                  onChange={handleExistingEmi}
+                  inputProps={{
+                    type: "number",
+                  }}
+                  value={existingEmi}
+                  sx={{ width: "100%" }}
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+
+          <Stack direction="row" sx={{ alignItems: "center", mb: 1, mt: 1 }}>
+            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
+            <Slider
+              value={existingEmi}
+              valueLabelDisplay="auto"
+              onChange={handleExistingEmi}
+              sx={PrettoSlider}
+              min={0}
+              max={100000}
+              step={10}
+            />
+            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
+            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
+            <CurrencyRupeeIcon sx={rupeeSymbolStyle} />
+          </Stack>
+        </Grid>
+
+        <Grid sx={inputBlockStyle}>
+          <Grid container>
+            <Grid size={{ xs: 6 }} sx={sliderHeadingMobile}>
+              <Typography mr={2} align="left">
                 Interest :
               </Typography>
             </Grid>
             <Grid size={{ xs: 6 }} sx={{ marginLeft: "auto", marginRight: 0 }}>
               <Stack direction="row">
-                <Typography sx={{ mr: 2 }}>% </Typography>
+                <Typography sx={{ mr: 2, ...sliderHeadingMobile }}>
+                  %{" "}
+                </Typography>
                 <TextField
                   required
                   variant="standard"
@@ -244,7 +316,7 @@ export const HomeLoanCalculatorMobile = () => {
                   inputProps={{
                     type: "number",
                   }}
-                  value={roi}
+                  value={interest}
                   sx={{ width: "100%" }}
                 />
               </Stack>
@@ -252,7 +324,7 @@ export const HomeLoanCalculatorMobile = () => {
           </Grid>
           <Stack direction="row" sx={{ alignItems: "center", mb: 1, mt: 1 }}>
             <Slider
-              value={roi}
+              value={interest}
               valueLabelDisplay="auto"
               onChange={handleInterest}
               sx={PrettoSlider}
@@ -262,8 +334,20 @@ export const HomeLoanCalculatorMobile = () => {
             />
           </Stack>
         </Grid>
+        <Grid sx={eligibilityBlockStyle}>
+          {/* Display Pie Chart only if the user is eligible for Loan */}
+          <Grid>
+            <Typography variant="h5" sx={eligibilityHeadingStyle}>
+              {isEligibleForLoan ? "Eligible" : "Not Eligible"}
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid size={{ xs: 12 }} sx={{ display: { xs: "block", md: "none" } }}>
+      <Grid
+        display={isEligibleForLoan ? "block" : "none"}
+        size={{ xs: 12 }}
+        sx={{ display: { xs: "block", md: "none" } }}
+      >
         <Grid container>
           <PieChart
             colors={[theme.palette.primary.main, theme.palette.secondary.main]}
@@ -271,10 +355,10 @@ export const HomeLoanCalculatorMobile = () => {
             series={[
               {
                 data: [
-                  { id: 0, value: principalAmount, label: "Loan Amount" },
+                  { id: 0, value: eligibleLoan, label: "Loan Amount" },
                   {
                     id: 1,
-                    value: totalInterest,
+                    value: calculatedInterest,
                     label: "Interest on Loan",
                   },
                 ],
@@ -286,7 +370,7 @@ export const HomeLoanCalculatorMobile = () => {
                 faded: {
                   innerRadius: 10,
                   additionalRadius: -5,
-                  color: "lightpurple",
+                  color: "lightgreen",
                 },
               },
             ]}
@@ -295,10 +379,13 @@ export const HomeLoanCalculatorMobile = () => {
             slotProps={{
               legend: {
                 direction: "horizontal",
+                // itemGap: 40,
                 position: {
                   horizontal: "center",
                   vertical: "bottom",
                 },
+                // markGap: 10,
+                // padding: 2,
               },
             }}
           />
@@ -311,50 +398,34 @@ export const HomeLoanCalculatorMobile = () => {
           </Grid>
           <Grid container>
             <Grid>
-              <Typography>Total Amount</Typography>
-              <Typography variant="caption">(Loan + Interest)</Typography>
+              <Typography>Eligible EMI : </Typography>
             </Grid>
             <Grid>
               <Stack direction="row">
-                <Typography>:</Typography>
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography>{totalInterest + principalAmount}</Typography>
+                <Typography>{eligibleEmi}</Typography>
               </Stack>
             </Grid>
           </Grid>
           <Grid container>
             <Grid>
-              <Typography>Interest</Typography>
+              <Typography>Principle Loan Amount : </Typography>
             </Grid>
             <Grid>
               <Stack direction="row">
-                <Typography>:</Typography>
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography>{totalInterest}</Typography>
+                <Typography> {eligibleLoan}</Typography>
               </Stack>
             </Grid>
           </Grid>
           <Grid container>
             <Grid>
-              <Typography>Principal Loan Amount</Typography>
+              <Typography>Interest : </Typography>
             </Grid>
             <Grid>
               <Stack direction="row">
-                <Typography>:</Typography>
                 <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography> {principalAmount}</Typography>
-              </Stack>
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid>
-              <Typography>EMI Value</Typography>
-            </Grid>
-            <Grid>
-              <Stack direction="row">
-                <Typography>:</Typography>
-                <CurrencyRupeeIcon sx={rupeeResultSymbolStyle} />
-                <Typography>{loanEmi}</Typography>
+                <Typography>{calculatedInterest}</Typography>
               </Stack>
             </Grid>
           </Grid>
@@ -363,3 +434,5 @@ export const HomeLoanCalculatorMobile = () => {
     </Grid>
   );
 };
+
+export default LoanEligibilityCalculatorMobile;

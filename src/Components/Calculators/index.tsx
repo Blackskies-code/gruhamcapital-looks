@@ -4,7 +4,8 @@ import { useState } from "react";
 // import { HomeLoanCalculator } from "../HomeLoanCalculator";
 import { HomeLoanCalculatorMobile } from "../Mobile/HomeLoanCalculator/index";
 import { HomeLoanCalculatorWeb } from "../Web/HomeLoanCalculator/index";
-import LoanEligibilityCalculator from "../Web/LoanEligibilityCalculator";
+import LoanEligibilityCalculatorWeb from "../Web/LoanEligibilityCalculator";
+import LoanEligibilityCalculatorMobile from "../Mobile/LoanEligibilityCalculator";
 
 export const Calculators = () => {
   const [tabNumber, setTabNumber] = useState(0);
@@ -28,7 +29,7 @@ export const Calculators = () => {
         <Tabs
           value={tabNumber}
           onChange={handleChange}
-          variant="standard"
+          variant="scrollable"
           sx={tabStyles}
         >
           <Tab label="Home Loan Calculator" sx={tabStyles} />
@@ -42,7 +43,8 @@ export const Calculators = () => {
         )}
         {tabNumber === 1 && (
           <div>
-            <LoanEligibilityCalculator />
+            <LoanEligibilityCalculatorMobile />
+            <LoanEligibilityCalculatorWeb />
           </div>
         )}
       </Box>
