@@ -16,6 +16,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import getScheduleForConsultation from "../../Services/ConsultationService";
+import "./style.css";
 
 interface IConsultationSchedule {
   time: string;
@@ -48,7 +49,7 @@ export const OnlineConsulationForm = () => {
     const selectedDate = dayjs(event).format("MM/DD/YYYY");
     setDate(selectedDate);
     setLoading(true);
-    console.log(date)
+    console.log(date);
     const data = await getScheduleForConsultation();
     setLoading(false);
     setConsultationSchedule([...data]);
@@ -86,7 +87,7 @@ export const OnlineConsulationForm = () => {
   const submitButton = {
     color: theme.palette.secondary.contrastText,
     borderRadius: 15,
-    marginTop: 2,
+    margin: "2px",
     textTransform: "none",
     backgroundColor: theme.palette.secondary.main,
   };
@@ -94,7 +95,6 @@ export const OnlineConsulationForm = () => {
   const buttonPlacement = {
     marginLeft: "auto",
   };
-
 
   const headerStyle = {
     fontSize: 35,
@@ -247,9 +247,15 @@ export const OnlineConsulationForm = () => {
           </Grid>
           <Grid container size={10}>
             <Grid sx={buttonPlacement}>
-              <Button variant="contained" sx={submitButton}>
-                Request Consultation
-              </Button>
+              <div className="button-anim">
+                <Button
+                  className="highlight-button"
+                  variant="contained"
+                  sx={{ ...submitButton, position: "relative", zIndex: 1 }}
+                >
+                  Request Consultation
+                </Button>
+              </div>
             </Grid>
           </Grid>
         </Grid>
