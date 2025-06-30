@@ -145,9 +145,6 @@ const LoanEligibilityCalculatorMobile = () => {
     fontSize: 26,
     marginBottom: 3,
   };
-  const containerGrid = {
-    padding: 0,
-  };
 
   const eligibilityBlockStyle = {
     padding: 2,
