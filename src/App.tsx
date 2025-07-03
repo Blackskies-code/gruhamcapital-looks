@@ -1,25 +1,43 @@
-import { ThemeProvider } from "@emotion/react";
-import FooterBar from "./Common/FooterBar";
-import HeaderNavBar from "./Common/Header/HeaderNavBar";
-import theme from "./theme";
-import { Container } from "@mui/material";
-import { Route, Routes } from "react-router";
 import { Home } from "./Pages/Home";
+import { VerifyAdmin } from "./Components/Admin/VerifyAdmin";
+import { Navigate, Outlet, useRoutes } from "react-router";
+import Layout from "./Pages/Layout";
+import { AdminHome } from "./Components/Admin/AdminHome";
 
 function App() {
-  return (
-    <>
-      <ThemeProvider theme={theme}>
-        <HeaderNavBar />
-        <Container>
-          <Routes>
-            <Route path="/" Component={Home} />
-          </Routes>
-        </Container>
-        <FooterBar />
-      </ThemeProvider>
-    </>
-  );
+  const ProtectedRoutes = () => {
+    if (sessionStorage.getItem("admin")) {
+      return <Outlet />;
+    }
+    return <Navigate to={"/verifyadmin"} replace={true} />;
+  };
+
+  let element = useRoutes([
+    {
+      element: <Layout />,
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+        {
+          path: "verifyadmin",
+          element: <VerifyAdmin />,
+        },
+        {
+          element: <ProtectedRoutes />,
+          children: [
+            {
+              path: "admin",
+              element: <AdminHome />,
+            },
+          ],
+        },
+      ],
+    },
+  ]);
+
+  return element;
 }
 
 export default App;
