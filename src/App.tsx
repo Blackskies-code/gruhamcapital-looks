@@ -2,7 +2,7 @@ import { Home } from "./Pages/Home";
 import { VerifyAdmin } from "./Components/Admin/VerifyAdmin";
 import { Navigate, Outlet, useRoutes } from "react-router";
 import Layout from "./Pages/Layout";
-import { AdminHome } from "./Components/Admin/AdminHome";
+import { Admin } from "./Pages/Admin";
 
 function App() {
   const ProtectedRoutes = () => {
@@ -29,7 +29,7 @@ function App() {
           children: [
             {
               path: "admin",
-              element: <AdminHome />,
+              element: <Admin />,
             },
           ],
         },

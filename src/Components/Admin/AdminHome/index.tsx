@@ -1,150 +1,114 @@
-import { Button, Container, Grid, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid,
+  TextareaAutosize,
+  TextField,
+  Typography,
+} from "@mui/material";
 import theme from "../../../theme";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useEffect, useState } from "react";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import styles from "../style";
 
 export const AdminHome = () => {
-  const listOfSlots = [
-    {
-      name: "abc",
-      description: "test",
-      startTime: "10:30am",
-      endTime: "12:30pm",
-      availability: "15",
-    },
-    {
-      name: "def",
-      description: "test two",
-      startTime: "1:30pm",
-      endTime: "2:30pm",
-      availability: "15",
-    },
-    {
-      name: "ghi",
-      description: "test three",
-      startTime: "3:30am",
-      endTime: "4:30pm",
-      availability: "15",
-    },
-  ];
-  const formStyle = {
-    padding: 6,
-    marginTop: 10,
-    marginBottom: 4,
-  };
+  const [slotName, setSlotName] = useState<string>("");
+  const [startDateTime, setStartDateTime] = useState<Dayjs>(dayjs());
+  const [endDateTime, setEndDateTime] = useState<Dayjs>(dayjs());
 
-  const boxStyle = {
-    background: theme.palette.secondary.contrastText,
-    padding: 0,
-  };
-
-  const headerStyle = {
-    fontSize: 30,
-    fontFamily: "Montserrat-Bold",
-    textAlign: "center",
-  };
-
-  const inputGridStyle = {
-    margin: 2,
-    padding: 2,
-    justifyContent: "center",
-  };
-
-  const cardHeaderStyle = {
-    fontSize: 20,
-    fontFamily: "Montserrat-Bold",
-    textAlign: "left",
-    marginBottom: 2,
-  };
-
-  const inputStyle = {
-    marginBottom: 3,
-  };
-
-  const formLabelStyle = {
-    alignContent: "end",
-    justifyItems: "center",
-  };
-
-  const submitButton = {
-    color: theme.palette.secondary.contrastText,
-    borderRadius: 15,
-    margin: "2px",
-    textTransform: "none",
-    backgroundColor: theme.palette.secondary.main,
+  const handleSlotName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSlotName(event.target.value);
   };
 
   return (
-    <Container sx={{ marginBottom: 4 }} maxWidth="md">
-      <Grid sx={[formStyle, boxStyle]}>
-        <Typography sx={headerStyle}>Admin Page</Typography>
+    <Container sx={{ marginBottom: 4 }} maxWidth="lg">
+      <Grid sx={[styles.formStyle, styles.boxStyle]}>
+        <Typography sx={styles.headerStyle}>Admin Page</Typography>
       </Grid>
       {/* Create Slot */}
       <Grid className="cardShadow">
-        <Grid sx={inputGridStyle}>
+        <Grid sx={styles.inputGridStyle}>
           <Grid>
-            <Typography sx={cardHeaderStyle}>Create Slot</Typography>
+            <Typography sx={styles.cardHeaderStyle}>Create Slot</Typography>
           </Grid>
           {/* name */}
-          <Grid sx={inputStyle} container>
-            <Grid sx={formLabelStyle} size={{ md: 2 }}>
+          <Grid sx={styles.inputStyle} container>
+            <Grid sx={styles.formLabelStyle} size={{ md: 4, sm: 6, xs: 12 }}>
               <Typography style={{ alignSelf: "center" }}>Name:</Typography>
             </Grid>
-            <Grid size={{ md: 6 }}>
+            <Grid size={{ md: 8, sm: 6, xs: 12 }}>
               <TextField
                 placeholder="enter name"
                 variant="standard"
+                value={slotName}
+                onChange={handleSlotName}
                 fullWidth
               ></TextField>
             </Grid>
           </Grid>
           {/* Desc i/p */}
-          <Grid container sx={inputStyle}>
-            <Grid sx={formLabelStyle} size={{ md: 2 }}>
+          <Grid container sx={styles.inputStyle}>
+            <Grid sx={styles.formLabelStyle} size={{ md: 4, sm: 6, xs: 12 }}>
               <Typography>Description:</Typography>
             </Grid>
-            <Grid size={{ md: 6 }}>
-              <TextField
-                placeholder="enter desc"
-                variant="standard"
-                fullWidth
-              ></TextField>
+            <Grid size={{ md: 8, sm: 6, xs: 12 }}>
+              <TextareaAutosize
+                aria-label="minimum height"
+                maxRows={3}
+                minRows={3}
+                placeholder="Enter Desc"
+                style={{
+                  width: theme.breakpoints.down("sm") ? "100%" : "50",
+                }}
+              />
             </Grid>
           </Grid>
           {/* starttime */}
-          <Grid container sx={inputStyle}>
+          <Grid container sx={styles.inputStyle}>
             <Grid
-              sx={{ ...formLabelStyle, alignContent: "center" }}
-              size={{ md: 2 }}
+              sx={{ ...styles.formLabelStyle, alignContent: "center" }}
+              size={{ md: 4, sm: 6, xs: 12 }}
             >
               <Typography>Start Time:</Typography>
             </Grid>
-            <Grid size={{ md: 6 }}>
+            <Grid size={{ md: 8, sm: 6, xs: 12 }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TimePicker label="start time" />
+                <DateTimePicker
+                  label="start date/time"
+                  value={startDateTime}
+                  onChange={(date) => (date ? setStartDateTime(date) : "")}
+                />
               </LocalizationProvider>
             </Grid>
           </Grid>
           {/* end time */}
-          <Grid container sx={inputStyle}>
+          <Grid container sx={styles.inputStyle}>
             <Grid
-              sx={{ ...formLabelStyle, alignContent: "center" }}
-              size={{ md: 2 }}
+              sx={{ ...styles.formLabelStyle, alignContent: "center" }}
+              size={{ md: 4, sm: 6, xs: 12 }}
             >
               <Typography>End Time:</Typography>
             </Grid>
-            <Grid size={{ md: 6 }}>
+            <Grid size={{ md: 8, sm: 6, xs: 12 }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <TimePicker label="end time" />
+                <DateTimePicker
+                  label="end date/time"
+                  minDateTime={startDateTime}
+                  value={endDateTime}
+                  onChange={(date) => (date ? setEndDateTime(date) : "")}
+                />
               </LocalizationProvider>
             </Grid>
           </Grid>
           {/* Availability per slot */}
-          <Grid container sx={inputStyle}>
-            <Grid sx={formLabelStyle} size={{ md: 2 }}>
+          <Grid container sx={styles.inputStyle}>
+            <Grid sx={styles.formLabelStyle} size={{ md: 4, sm: 6, xs: 12 }}>
               <Typography>Availability per Slot:</Typography>
             </Grid>
-            <Grid size={{ md: 6 }}>
+            <Grid size={{ md: 8, sm: 6, xs: 12 }}>
               <TextField
                 placeholder="slot availability count"
                 variant="standard"
@@ -156,7 +120,7 @@ export const AdminHome = () => {
           <Grid style={{ textAlign: "right" }}>
             <Button
               variant="contained"
-              sx={{ ...submitButton, position: "relative", zIndex: 1 }}
+              sx={{ ...styles.submitButton, position: "relative", zIndex: 1 }}
             >
               Create
             </Button>
@@ -164,36 +128,6 @@ export const AdminHome = () => {
         </Grid>
       </Grid>
       {/* List/Delete Slot */}
-      <Grid style={{ marginTop: "40px" }} className="cardShadow">
-        <Grid
-          sx={{
-            ...inputGridStyle,
-            padding: 2,
-            marginBottom: 0,
-            paddingBottom: 0,
-          }}
-        >
-          <Typography sx={cardHeaderStyle}>List/Delete Slot</Typography>
-        </Grid>
-        <Grid container>
-          {listOfSlots.map((slot) => {
-            return (
-              <Grid sx={inputGridStyle} className="cardShadow">
-                <Typography>Name : {slot.name}</Typography>
-                <Typography>Description : {slot.description}</Typography>
-                <Typography>Start Time: {slot.startTime}</Typography>
-                <Typography>End Time: {slot.endTime}</Typography>
-                <Typography>Availability: {slot.availability}</Typography>
-                <Grid style={{ textAlign: "right" }}>
-                  <Button variant="contained" sx={{ ...submitButton }}>
-                    Delete
-                  </Button>
-                </Grid>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Grid>
     </Container>
   );
 };
