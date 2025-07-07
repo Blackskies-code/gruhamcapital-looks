@@ -9,12 +9,12 @@ import {
 import theme from "../../../theme";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import styles from "../style";
 
-export const AdminHome = () => {
+export const CreateSlot = () => {
   const [slotName, setSlotName] = useState<string>("");
   const [startDateTime, setStartDateTime] = useState<Dayjs>(dayjs());
   const [endDateTime, setEndDateTime] = useState<Dayjs>(dayjs());

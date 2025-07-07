@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
-import { AdminHome } from "../Components/Admin/AdminHome";
+import { CreateSlot } from "../Components/Admin/CreateSlot";
 import { ListSlots } from "../Components/Admin/ListSlots";
 
 export const Admin = () => {
   return (
     <Box>
-      <AdminHome />
+      <CreateSlot />
       <ListSlots />
     </Box>
   );
