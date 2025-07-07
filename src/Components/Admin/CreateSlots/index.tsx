@@ -14,7 +14,7 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import styles from "../style";
 
-export const CreateSlot = () => {
+export const CreateSlots = () => {
   const [slotName, setSlotName] = useState<string>("");
   const [startDateTime, setStartDateTime] = useState<Dayjs>(dayjs());
   const [endDateTime, setEndDateTime] = useState<Dayjs>(dayjs());
