@@ -1,7 +1,7 @@
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import theme from "../../../theme";
 import React, { useEffect, useState } from "react";
-import { doAdminVerification } from "../../../Services/AuthService";
+import { doAdminVerificationApi } from "../../../Services/AuthService";
 import { useNavigate } from "react-router";
 
 export const VerifyAdmin = () => {
@@ -52,7 +52,7 @@ export const VerifyAdmin = () => {
   };
 
   const authenticateAdmin = async () => {
-    const res = await doAdminVerification({ password });
+    const res = await doAdminVerificationApi({ password });
     console.log("res", res);
     sessionStorage.setItem("admin", "true");
     navigate("/admin");

@@ -15,14 +15,9 @@ import theme from "../../theme";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import getScheduleForConsultation from "../../Services/ConsultationService";
+import getScheduleForConsultationApi from "../../Services/ConsultationService";
 import "./style.css";
-
-interface IConsultationSchedule {
-  time: string;
-  availableSlots: string;
-  bookedSlots?: string;
-}
+import type { IConsultationSchedule } from "../../Types";
 
 export const OnlineConsulationForm = () => {
   const purposeOfLoansList = ["Mortgage", "Housing"];
@@ -50,7 +45,7 @@ export const OnlineConsulationForm = () => {
     setDate(selectedDate);
     setLoading(true);
     console.log(date);
-    const data = await getScheduleForConsultation();
+    const data = await getScheduleForConsultationApi();
     setLoading(false);
     setConsultationSchedule([...data]);
   };

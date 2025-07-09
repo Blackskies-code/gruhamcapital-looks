@@ -1,4 +1,4 @@
-const getScheduleForConsultation = async () => {
+const getScheduleForConsultationApi = async () => {
   let apiData: any = [];
   //   api to fetch the available slots for a user to book
   fetch("https://jsonplaceholder.typicode.com/todos/1")
@@ -43,4 +43,4 @@ const timeoutFn = () => {
   });
 };
 
-export default getScheduleForConsultation;
+export default getScheduleForConsultationApi;

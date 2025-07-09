@@ -1,9 +1,6 @@
 import axios from "axios";
+import type { AuthJson } from "../../Types";
 
-interface AuthJson {
-  password: string;
-}
-
-export const doAdminVerification = async (authJson: AuthJson) => {
+export const doAdminVerificationApi = async (authJson: AuthJson) => {
   return axios.post("https://jsonplaceholder.typicode.com/posts", authJson);
 };
