@@ -1,26 +1,33 @@
 import {
-  Box,
-  Button,
   Grid,
-  Paper,
-  styled,
-  TextField,
   Typography,
+  TextField,
+  Button,
+  Paper,
+  Box,
+  styled,
 } from "@mui/material";
 import { DataGrid, type GridColDef, type GridRowId } from "@mui/x-data-grid";
-import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import React, { useState } from "react";
-import styles from "../style";
 import theme from "../../../theme";
-import { deleteSlotsApi, fetchSlotsApi } from "../../../Services/Admin";
-import type { IListSlotsFilter, IRowsForListSlots } from "../../../Types";
+import styles from "../style";
+import dayjs from "dayjs";
+import {
+  fetchSlotsApi,
+  deleteSlotsApi,
+  fetchConsultationsApi,
+} from "../../../Services/Admin";
+import type {
+  IListConsultationFilter,
+  IRowsForListSlots,
+} from "../../../Types";
 
-export const ListSlots = () => {
-  const [listSlotsFilterObj, setListSlotsFilterObj] =
-    useState<IListSlotsFilter>({
-      slotIdOrName: "",
+export const ListConsultations = () => {
+  const [listConsultationFilterObj, setListConsultationFilterObj] =
+    useState<IListConsultationFilter>({
+      consultationIdOrName: "",
       startTime: dayjs(),
       endTime: dayjs(),
     });
@@ -28,8 +35,10 @@ export const ListSlots = () => {
   const [rows, setRows] = useState<IRowsForListSlots[]>([]);
 
   const handleListSlotsInputs = async () => {
-    console.log("slots values", listSlotsFilterObj);
-    const data: IRowsForListSlots[] = await fetchSlotsApi(listSlotsFilterObj);
+    console.log("slots values", listConsultationFilterObj);
+    const data: IRowsForListSlots[] = await fetchConsultationsApi(
+      listConsultationFilterObj
+    );
     setRows(data);
   };
 
@@ -106,7 +115,12 @@ export const ListSlots = () => {
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70, sortable: false },
-    { field: "slotName", headerName: "Slot Name", width: 130, sortable: false },
+    {
+      field: "consultationName",
+      headerName: "Consultation Name",
+      width: 130,
+      sortable: false,
+    },
     {
       field: "description",
       headerName: "Description",
@@ -125,50 +139,46 @@ export const ListSlots = () => {
       width: 150,
       sortable: false,
     },
-    {
-      field: "availability",
-      headerName: "Availability",
-      width: 100,
-      sortable: false,
-    },
   ];
 
   const paginationModel = { page: 0, pageSize: 5 };
 
   return (
     <Grid>
-      {/* List/Delete Slot */}
+      {/* List/Delete Consultations */}
       <Grid sx={{ ...styles.inputGridStyle, marginBottom: 0 }}>
-        <Typography sx={styles.cardHeaderStyle}>List/ Delete Slot</Typography>
+        <Typography sx={styles.cardHeaderStyle}>
+          List/ Delete Consultation
+        </Typography>
       </Grid>
       <Grid container>
         <Grid sx={{ ...styles.inputGridStyle, marginBottom: 0 }} container>
           <Typography sx={{ alignContent: "center", marginRight: 1 }}>
-            Slot Id/Name:{" "}
+            Consultation Id/Name:{" "}
           </Typography>
           <TextField
-            placeholder="slot id/name"
+            placeholder="consultation id/name"
             variant="standard"
-            value={listSlotsFilterObj?.slotIdOrName}
+            value={listConsultationFilterObj?.consultationIdOrName}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setListSlotsFilterObj((prev) => ({
+              setListConsultationFilterObj((prev) => ({
                 ...prev,
-                slotIdOrName: event.target.value,
+                consultationIdOrName: event.target.value,
               }))
             }
           ></TextField>
         </Grid>
         <Grid sx={{ ...styles.inputGridStyle, marginBottom: 0 }} container>
           <Typography sx={{ alignContent: "center", marginRight: 1 }}>
-            Slot Start Time:{" "}
+            Start Time:{" "}
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="start date/time"
-              value={listSlotsFilterObj.startTime}
+              value={listConsultationFilterObj.startTime}
               onChange={(date) =>
                 date
-                  ? setListSlotsFilterObj((prev) => ({
+                  ? setListConsultationFilterObj((prev) => ({
                       ...prev,
                       startTime: date,
                     }))
@@ -179,15 +189,15 @@ export const ListSlots = () => {
         </Grid>
         <Grid sx={{ ...styles.inputGridStyle, marginBottom: 0 }} container>
           <Typography sx={{ alignContent: "center", marginRight: 1 }}>
-            Slot End Time:{" "}
+            End Time:{" "}
           </Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="end date/time"
-              value={listSlotsFilterObj.endTime}
+              value={listConsultationFilterObj.endTime}
               onChange={(date) =>
                 date
-                  ? setListSlotsFilterObj((prev) => ({
+                  ? setListConsultationFilterObj((prev) => ({
                       ...prev,
                       endTime: date,
                     }))

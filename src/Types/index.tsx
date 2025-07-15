@@ -8,6 +8,12 @@ export interface IListSlotsFilter {
   endTime?: Dayjs;
 }
 
+export interface IListConsultationFilter {
+  consultationIdOrName?: string;
+  startTime?: Dayjs;
+  endTime?: Dayjs;
+}
+
 export interface IConsultationSchedule {
   time: string;
   availableSlots: string;

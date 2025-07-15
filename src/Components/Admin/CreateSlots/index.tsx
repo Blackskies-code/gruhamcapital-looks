@@ -127,7 +127,6 @@ export const CreateSlots = () => {
           </Grid>
         </Grid>
       </Grid>
-      {/* List/Delete Slot */}
     </Container>
   );
 };
