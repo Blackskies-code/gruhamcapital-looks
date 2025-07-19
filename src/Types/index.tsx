@@ -13,13 +13,6 @@ export interface IListConsultationFilter {
   startTime?: Dayjs;
   endTime?: Dayjs;
 }
-
-export interface IConsultationSchedule {
-  time: string;
-  availableSlots: string;
-  bookedSlots?: string;
-}
-
 export interface LayoutProps {
   children?: ReactNode;
 }
@@ -28,7 +21,7 @@ export interface AuthJson {
   password: string;
 }
 
-export interface IRowsForListSlots {
+export interface ISlotObject {
   id?: number | GridRowId | undefined;
   slotName?: string | null;
   description?: string | null;

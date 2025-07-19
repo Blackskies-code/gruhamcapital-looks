@@ -19,10 +19,7 @@ import {
   deleteSlotsApi,
   fetchConsultationsApi,
 } from "../../../Services/Admin";
-import type {
-  IListConsultationFilter,
-  IRowsForListSlots,
-} from "../../../Types";
+import type { IListConsultationFilter, ISlotObject } from "../../../Types";
 
 export const ListConsultations = () => {
   const [listConsultationFilterObj, setListConsultationFilterObj] =
@@ -32,11 +29,11 @@ export const ListConsultations = () => {
       endTime: dayjs(),
     });
   const [selectedRows, setSelectedRows] = useState<Set<GridRowId>>(new Set());
-  const [rows, setRows] = useState<IRowsForListSlots[]>([]);
+  const [rows, setRows] = useState<ISlotObject[]>([]);
 
   const handleListSlotsInputs = async () => {
     console.log("slots values", listConsultationFilterObj);
-    const data: IRowsForListSlots[] = await fetchConsultationsApi(
+    const data: ISlotObject[] = await fetchConsultationsApi(
       listConsultationFilterObj
     );
     setRows(data);

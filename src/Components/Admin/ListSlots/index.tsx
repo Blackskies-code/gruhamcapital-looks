@@ -15,7 +15,7 @@ import React, { useState } from "react";
 import styles from "../style";
 import theme from "../../../theme";
 import { deleteSlotsApi, fetchSlotsApi } from "../../../Services/Admin";
-import type { IListSlotsFilter, IRowsForListSlots } from "../../../Types";
+import type { IListSlotsFilter, ISlotObject } from "../../../Types";
 
 export const ListSlots = () => {
   const [listSlotsFilterObj, setListSlotsFilterObj] =
@@ -25,11 +25,11 @@ export const ListSlots = () => {
       endTime: dayjs(),
     });
   const [selectedRows, setSelectedRows] = useState<Set<GridRowId>>(new Set());
-  const [rows, setRows] = useState<IRowsForListSlots[]>([]);
+  const [rows, setRows] = useState<ISlotObject[]>([]);
 
   const handleListSlotsInputs = async () => {
     console.log("slots values", listSlotsFilterObj);
-    const data: IRowsForListSlots[] = await fetchSlotsApi(listSlotsFilterObj);
+    const data: ISlotObject[] = await fetchSlotsApi(listSlotsFilterObj);
     setRows(data);
   };
 
