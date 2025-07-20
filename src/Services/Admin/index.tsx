@@ -1,6 +1,10 @@
 import type { GridRowId } from "@mui/x-data-grid";
 import axios from "axios";
-import type { IListConsultationFilter, IListSlotsFilter } from "../../Types";
+import type {
+  IListConsultationFilter,
+  IListSlotsFilter,
+  ISlotObject,
+} from "../../Types";
 
 export const deleteSlotsApi = async (idsArr: GridRowId[]) => {
   // axios.delete();
@@ -152,4 +156,8 @@ export const fetchConsultationsApi = async (
       endTime: 85,
     },
   ];
+};
+
+export const createSlotsApi = async (reqBody: ISlotObject) => {
+  return axios.post(import.meta.env.VITE_API_URL, reqBody);
 };

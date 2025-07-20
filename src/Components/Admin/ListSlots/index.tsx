@@ -10,7 +10,7 @@ import {
 import { DataGrid, type GridColDef, type GridRowId } from "@mui/x-data-grid";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useState } from "react";
 import styles from "../style";
 import theme from "../../../theme";
@@ -18,18 +18,20 @@ import { deleteSlotsApi, fetchSlotsApi } from "../../../Services/Admin";
 import type { IListSlotsFilter, ISlotObject } from "../../../Types";
 
 export const ListSlots = () => {
-  const [listSlotsFilterObj, setListSlotsFilterObj] =
-    useState<IListSlotsFilter>({
-      slotIdOrName: "",
-      startTime: dayjs(),
-      endTime: dayjs(),
-    });
+  const [slotIdOrName, setslotIdOrName] = useState("");
+  const [startTime, setStartTime] = useState<Dayjs | null>(null);
+  const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [selectedRows, setSelectedRows] = useState<Set<GridRowId>>(new Set());
   const [rows, setRows] = useState<ISlotObject[]>([]);
 
   const handleListSlotsInputs = async () => {
-    console.log("slots values", listSlotsFilterObj);
-    const data: ISlotObject[] = await fetchSlotsApi(listSlotsFilterObj);
+    const body = {
+      slot_id: slotIdOrName,
+      startTime: dayjs(startTime).valueOf(),
+      endTime: dayjs(endTime).valueOf(),
+    };
+    console.log("slots values", body);
+    const data: ISlotObject[] = await fetchSlotsApi(body);
     setRows(data);
   };
 
@@ -149,12 +151,9 @@ export const ListSlots = () => {
           <TextField
             placeholder="slot id/name"
             variant="standard"
-            value={listSlotsFilterObj?.slotIdOrName}
+            value={slotIdOrName}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setListSlotsFilterObj((prev) => ({
-                ...prev,
-                slotIdOrName: event.target.value,
-              }))
+              setslotIdOrName(event.target.value)
             }
           ></TextField>
         </Grid>
@@ -165,15 +164,8 @@ export const ListSlots = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="start date/time"
-              value={listSlotsFilterObj.startTime}
-              onChange={(date) =>
-                date
-                  ? setListSlotsFilterObj((prev) => ({
-                      ...prev,
-                      startTime: date,
-                    }))
-                  : ""
-              }
+              value={startTime}
+              onChange={(date) => setStartTime(date)}
             />
           </LocalizationProvider>
         </Grid>
@@ -184,15 +176,8 @@ export const ListSlots = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="end date/time"
-              value={listSlotsFilterObj.endTime}
-              onChange={(date) =>
-                date
-                  ? setListSlotsFilterObj((prev) => ({
-                      ...prev,
-                      endTime: date,
-                    }))
-                  : ""
-              }
+              value={endTime}
+              onChange={(date) => setEndTime(date)}
             />
           </LocalizationProvider>
         </Grid>

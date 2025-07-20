@@ -13,29 +13,24 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import React, { useState } from "react";
 import theme from "../../../theme";
 import styles from "../style";
-import dayjs from "dayjs";
-import {
-  fetchSlotsApi,
-  deleteSlotsApi,
-  fetchConsultationsApi,
-} from "../../../Services/Admin";
-import type { IListConsultationFilter, ISlotObject } from "../../../Types";
+import dayjs, { Dayjs } from "dayjs";
+import { deleteSlotsApi, fetchConsultationsApi } from "../../../Services/Admin";
+import type { ISlotObject } from "../../../Types";
 
 export const ListConsultations = () => {
-  const [listConsultationFilterObj, setListConsultationFilterObj] =
-    useState<IListConsultationFilter>({
-      consultationIdOrName: "",
-      startTime: dayjs(),
-      endTime: dayjs(),
-    });
+  const [consultationIdOrName, setConsultationIdOrName] = useState("");
+  const [startTime, setStartTime] = useState<Dayjs | null>(null);
+  const [endTime, setEndTime] = useState<Dayjs | null>(null);
   const [selectedRows, setSelectedRows] = useState<Set<GridRowId>>(new Set());
   const [rows, setRows] = useState<ISlotObject[]>([]);
 
-  const handleListSlotsInputs = async () => {
-    console.log("slots values", listConsultationFilterObj);
-    const data: ISlotObject[] = await fetchConsultationsApi(
-      listConsultationFilterObj
-    );
+  const listConsultations = async () => {
+    const body = {
+      consultation_id: consultationIdOrName,
+      startTime: dayjs(startTime).valueOf(),
+      endTime: dayjs(endTime).valueOf(),
+    };
+    const data: ISlotObject[] = await fetchConsultationsApi(body);
     setRows(data);
   };
 
@@ -156,12 +151,9 @@ export const ListConsultations = () => {
           <TextField
             placeholder="consultation id/name"
             variant="standard"
-            value={listConsultationFilterObj?.consultationIdOrName}
+            value={consultationIdOrName}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setListConsultationFilterObj((prev) => ({
-                ...prev,
-                consultationIdOrName: event.target.value,
-              }))
+              setConsultationIdOrName(event.target.value)
             }
           ></TextField>
         </Grid>
@@ -172,15 +164,8 @@ export const ListConsultations = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="start date/time"
-              value={listConsultationFilterObj.startTime}
-              onChange={(date) =>
-                date
-                  ? setListConsultationFilterObj((prev) => ({
-                      ...prev,
-                      startTime: date,
-                    }))
-                  : ""
-              }
+              value={startTime}
+              onChange={(date) => setStartTime(date)}
             />
           </LocalizationProvider>
         </Grid>
@@ -191,15 +176,8 @@ export const ListConsultations = () => {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="end date/time"
-              value={listConsultationFilterObj.endTime}
-              onChange={(date) =>
-                date
-                  ? setListConsultationFilterObj((prev) => ({
-                      ...prev,
-                      endTime: date,
-                    }))
-                  : ""
-              }
+              value={endTime}
+              onChange={(date) => setEndTime(date)}
             />
           </LocalizationProvider>
         </Grid>
@@ -212,7 +190,7 @@ export const ListConsultations = () => {
           <Button
             variant="contained"
             sx={{ ...styles.submitButton }}
-            onClick={handleListSlotsInputs}
+            onClick={listConsultations}
           >
             Submit
           </Button>

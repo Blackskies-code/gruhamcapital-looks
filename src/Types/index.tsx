@@ -4,14 +4,14 @@ import type { ReactNode } from "react";
 
 export interface IListSlotsFilter {
   slotIdOrName?: string;
-  startTime?: Dayjs;
-  endTime?: Dayjs;
+  startTime?: number;
+  endTime?: number;
 }
 
 export interface IListConsultationFilter {
   consultationIdOrName?: string;
-  startTime?: Dayjs;
-  endTime?: Dayjs;
+  startTime?: number;
+  endTime?: number;
 }
 export interface LayoutProps {
   children?: ReactNode;
@@ -28,4 +28,5 @@ export interface ISlotObject {
   startTime?: number | null;
   endTime?: number | null;
   availability?: number;
+  total?: number;
 }

@@ -41,8 +41,8 @@ export const OnlineConsulationForm = () => {
   const [mobileNumber, setMobileNumber] = useState<number>();
   const [email, setEmail] = useState<string>("");
   const [purposeOfLoan, setPurposeOfLoan] = useState<string>("");
-  const [date, setDate] = useState<number | null>(null);
-  const [consultationTime, setConsultationTime] = useState<
+  const [, setDate] = useState<number | null>(null);
+  const [consultationSlotTimes, setConsultationSlotTimes] = useState<
     consultationSlotTime[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -58,7 +58,7 @@ export const OnlineConsulationForm = () => {
     const resBody = await getScheduleForConsultationApi(reqBody);
     setLoading(false);
     const slotTimes = slotTimesFromData(resBody.data);
-    setConsultationTime(slotTimes);
+    setConsultationSlotTimes(slotTimes);
   };
 
   const slotTimesFromData = (dataArr: slotObj[]) => {
@@ -240,16 +240,18 @@ export const OnlineConsulationForm = () => {
             <Grid size={{ md: 7 }}>
               <FormControl>
                 <InputLabel id="demo-simple-select-label">
-                  {consultationTime.length ? "Pick a slot" : "Select the date"}
+                  {consultationSlotTimes.length
+                    ? "Pick a slot"
+                    : "Select the date"}
                 </InputLabel>
                 <Select
                   value={slotId}
                   label="Time"
                   onChange={(event) => setSlotId(event.target.value)}
                   style={{ width: 160 }}
-                  disabled={!consultationTime.length}
+                  disabled={!consultationSlotTimes.length}
                 >
-                  {consultationTime?.map((schedule, ind) => {
+                  {consultationSlotTimes?.map((schedule, ind) => {
                     return (
                       <MenuItem
                         value={schedule.slot_id}

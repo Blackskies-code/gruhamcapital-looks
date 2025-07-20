@@ -13,14 +13,24 @@ import { useState } from "react";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import styles from "../style";
+import { createSlotsApi } from "../../../Services/Admin";
 
 export const CreateSlots = () => {
   const [slotName, setSlotName] = useState<string>("");
-  const [startDateTime, setStartDateTime] = useState<Dayjs>(dayjs());
-  const [endDateTime, setEndDateTime] = useState<Dayjs>(dayjs());
+  const [startTime, setStartTime] = useState<Dayjs | undefined>(dayjs());
+  const [endTime, setEndTime] = useState<Dayjs | undefined>(dayjs());
+  const [description, setDescription] = useState<string>("");
+  const [consultationPerSlot, setConsultationPerSlot] = useState<number>();
 
-  const handleSlotName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSlotName(event.target.value);
+  const createSlots = async () => {
+    const body = {
+      name: slotName,
+      description,
+      startTime: dayjs(startTime).valueOf(),
+      endTime: dayjs(endTime).valueOf(),
+      total: consultationPerSlot,
+    };
+    await createSlotsApi(body);
   };
 
   return (
@@ -44,7 +54,7 @@ export const CreateSlots = () => {
                 placeholder="enter name"
                 variant="standard"
                 value={slotName}
-                onChange={handleSlotName}
+                onChange={(event) => setSlotName(event.target.value)}
                 fullWidth
               ></TextField>
             </Grid>
@@ -60,9 +70,11 @@ export const CreateSlots = () => {
                 maxRows={3}
                 minRows={3}
                 placeholder="Enter Desc"
+                value={description}
                 style={{
                   width: theme.breakpoints.down("sm") ? "100%" : "50",
                 }}
+                onChange={(event) => setDescription(event.target.value)}
               />
             </Grid>
           </Grid>
@@ -78,8 +90,8 @@ export const CreateSlots = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
                   label="start date/time"
-                  value={startDateTime}
-                  onChange={(date) => (date ? setStartDateTime(date) : "")}
+                  value={startTime}
+                  onChange={(date) => (date ? setStartTime(date) : "")}
                 />
               </LocalizationProvider>
             </Grid>
@@ -96,23 +108,30 @@ export const CreateSlots = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateTimePicker
                   label="end date/time"
-                  minDateTime={startDateTime}
-                  value={endDateTime}
-                  onChange={(date) => (date ? setEndDateTime(date) : "")}
+                  minDateTime={startTime}
+                  value={endTime}
+                  onChange={(date) => (date ? setEndTime(date) : "")}
                 />
               </LocalizationProvider>
             </Grid>
           </Grid>
-          {/* Availability per slot */}
+          {/* Total Consultations per slot */}
           <Grid container sx={styles.inputStyle}>
             <Grid sx={styles.formLabelStyle} size={{ md: 4, sm: 6, xs: 12 }}>
-              <Typography>Availability per Slot:</Typography>
+              <Typography>Consultations per Slot:</Typography>
             </Grid>
             <Grid size={{ md: 8, sm: 6, xs: 12 }}>
               <TextField
-                placeholder="slot availability count"
+                placeholder="total slots available"
                 variant="standard"
                 fullWidth
+                value={consultationPerSlot}
+                slotProps={{
+                  input: { type: "number" },
+                }}
+                onChange={(event) =>
+                  setConsultationPerSlot(parseInt(event.target.value))
+                }
               ></TextField>
             </Grid>
           </Grid>
@@ -121,6 +140,7 @@ export const CreateSlots = () => {
             <Button
               variant="contained"
               sx={{ ...styles.submitButton, position: "relative", zIndex: 1 }}
+              onClick={createSlots}
             >
               Create
             </Button>
