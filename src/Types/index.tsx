@@ -1,5 +1,4 @@
 import type { GridRowId } from "@mui/x-data-grid";
-import type { Dayjs } from "dayjs";
 import type { ReactNode } from "react";
 
 export interface IListSlotsFilter {
@@ -10,15 +9,15 @@ export interface IListSlotsFilter {
 
 export interface IListConsultationFilter {
   consultationIdOrName?: string;
-  startTime?: number;
-  endTime?: number;
+  starttime?: number;
+  endtime?: number;
 }
 export interface LayoutProps {
   children?: ReactNode;
 }
 
 export interface AuthJson {
-  password: string;
+  admin_token: string;
 }
 
 export interface ISlotObject {

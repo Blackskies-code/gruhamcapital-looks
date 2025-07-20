@@ -15,7 +15,17 @@ import React, { useState } from "react";
 import styles from "../style";
 import theme from "../../../theme";
 import { deleteSlotsApi, fetchSlotsApi } from "../../../Services/Admin";
-import type { IListSlotsFilter, ISlotObject } from "../../../Types";
+import type { ISlotObject } from "../../../Types";
+
+interface ISlotsResponse {
+  availabile: number;
+  description: string;
+  endtime: number;
+  id: string;
+  name: string;
+  starttime: number;
+  total: number;
+}
 
 export const ListSlots = () => {
   const [slotIdOrName, setslotIdOrName] = useState("");
@@ -30,9 +40,15 @@ export const ListSlots = () => {
       startTime: dayjs(startTime).valueOf(),
       endTime: dayjs(endTime).valueOf(),
     };
-    console.log("slots values", body);
-    const data: ISlotObject[] = await fetchSlotsApi(body);
-    setRows(data);
+    const data = await fetchSlotsApi(body);
+    const sanitizedData = data.data.map((obj: ISlotsResponse) => {
+      return {
+        ...obj,
+        starttime: dayjs(obj.starttime * 1000).format("DD/MM/YY"),
+        endtime: dayjs(obj.endtime * 1000).format("DD/MM/YY"),
+      };
+    });
+    setRows(sanitizedData);
   };
 
   const deleteSlots = async () => {
@@ -108,7 +124,7 @@ export const ListSlots = () => {
 
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70, sortable: false },
-    { field: "slotName", headerName: "Slot Name", width: 130, sortable: false },
+    { field: "name", headerName: "Slot Name", width: 130, sortable: false },
     {
       field: "description",
       headerName: "Description",
@@ -116,20 +132,26 @@ export const ListSlots = () => {
       sortable: false,
     },
     {
-      field: "startTime",
+      field: "starttime",
       headerName: "Start Time",
       width: 150,
       sortable: false,
     },
     {
-      field: "endTime",
+      field: "endtime",
       headerName: "End Time",
       width: 150,
       sortable: false,
     },
     {
-      field: "availability",
+      field: "availabile",
       headerName: "Availability",
+      width: 100,
+      sortable: false,
+    },
+    {
+      field: "total",
+      headerName: "Total",
       width: 100,
       sortable: false,
     },

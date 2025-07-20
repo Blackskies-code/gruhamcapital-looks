@@ -26,8 +26,8 @@ export const CreateSlots = () => {
     const body = {
       name: slotName,
       description,
-      startTime: dayjs(startTime).valueOf(),
-      endTime: dayjs(endTime).valueOf(),
+      starttime: dayjs(startTime).valueOf(),
+      endtime: dayjs(endTime).valueOf(),
       total: consultationPerSlot,
     };
     await createSlotsApi(body);

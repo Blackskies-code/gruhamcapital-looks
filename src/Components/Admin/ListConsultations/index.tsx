@@ -17,6 +17,15 @@ import dayjs, { Dayjs } from "dayjs";
 import { deleteSlotsApi, fetchConsultationsApi } from "../../../Services/Admin";
 import type { ISlotObject } from "../../../Types";
 
+interface IConsultationResponse {
+  date?: number;
+  email?: string;
+  id?: string;
+  mobile?: number;
+  name?: string;
+  purpose?: string;
+  slot_id?: string;
+}
 export const ListConsultations = () => {
   const [consultationIdOrName, setConsultationIdOrName] = useState("");
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
@@ -27,11 +36,15 @@ export const ListConsultations = () => {
   const listConsultations = async () => {
     const body = {
       consultation_id: consultationIdOrName,
-      startTime: dayjs(startTime).valueOf(),
-      endTime: dayjs(endTime).valueOf(),
+      starttime: dayjs(startTime).valueOf(),
+      endtime: dayjs(endTime).valueOf(),
     };
-    const data: ISlotObject[] = await fetchConsultationsApi(body);
-    setRows(data);
+    const data = await fetchConsultationsApi(body);
+    const sanitizedData = data.data.map((obj: IConsultationResponse) => {
+      // @ts-ignore - ts error cuz date is also is name of another library and reusing it causing issue
+      return { ...obj, date: dayjs(obj.date * 1000).format("DD/MM/YY") };
+    });
+    setRows(sanitizedData);
   };
 
   const deleteSlots = async () => {
@@ -108,26 +121,32 @@ export const ListConsultations = () => {
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 70, sortable: false },
     {
-      field: "consultationName",
+      field: "name",
       headerName: "Consultation Name",
       width: 130,
       sortable: false,
     },
     {
-      field: "description",
-      headerName: "Description",
-      width: 260,
-      sortable: false,
-    },
-    {
-      field: "startTime",
-      headerName: "Start Time",
+      field: "date",
+      headerName: "Date",
       width: 150,
       sortable: false,
     },
     {
-      field: "endTime",
-      headerName: "End Time",
+      field: "email",
+      headerName: "Email",
+      width: 150,
+      sortable: false,
+    },
+    {
+      field: "mobile",
+      headerName: "Mobile Number",
+      width: 150,
+      sortable: false,
+    },
+    {
+      field: "purpose",
+      headerName: "Purpose Of Loan",
       width: 150,
       sortable: false,
     },

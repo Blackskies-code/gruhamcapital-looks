@@ -1,11 +1,15 @@
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import theme from "../../../theme";
 import React, { useEffect, useState } from "react";
-import { doAdminVerificationApi } from "../../../Services/AuthService";
+import {
+  doAdminVerificationApi,
+  hashPassword,
+} from "../../../Services/AuthService";
 import { useNavigate } from "react-router";
 
 export const VerifyAdmin = () => {
   const [password, setPassword] = useState("");
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,15 +51,29 @@ export const VerifyAdmin = () => {
   };
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("val", event.target.value);
     setPassword(event.target.value);
+    // clearing error
+    if (isError) {
+      setIsError(false);
+    }
   };
 
   const authenticateAdmin = async () => {
-    const res = await doAdminVerificationApi({ password });
-    console.log("res", res);
-    sessionStorage.setItem("admin", "true");
-    navigate("/admin");
+    const encodedPassword = await hashPassword(password);
+    const res = await doAdminVerificationApi({ admin_token: encodedPassword });
+    if (!res.data.status) {
+      setIsError(true);
+    }
+    if (res.data.status) {
+      sessionStorage.setItem("admin", "true");
+      navigate("/admin");
+    }
+  };
+
+  const errorTextStyle = {
+    fontSize: "12px",
+    color: "red",
+    marginLeft: 2,
   };
 
   return (
@@ -74,9 +92,14 @@ export const VerifyAdmin = () => {
               placeholder="password"
               variant="standard"
               value={password}
+              slotProps={{ input: { type: "password" } }}
               onChange={handlePassword}
               fullWidth
+              error={isError}
             />
+            {isError && (
+              <Typography sx={errorTextStyle}>**Wrong Password</Typography>
+            )}
           </Grid>
           <Grid size={{ md: 2 }}>
             <Button
