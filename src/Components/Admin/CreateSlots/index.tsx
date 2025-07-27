@@ -9,11 +9,12 @@ import {
 import theme from "../../../theme";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import styles from "../style";
 import { createSlotsApi } from "../../../Services/Admin";
+import { SnackBarContext } from "../../../Context";
 
 export const CreateSlots = () => {
   const [slotName, setSlotName] = useState<string>("");
@@ -23,21 +24,31 @@ export const CreateSlots = () => {
   const [consultationPerSlot, setConsultationPerSlot] = useState<number>();
 
   const createSlots = async () => {
-    const body = {
-      name: slotName,
-      description,
-      starttime: dayjs(startTime).valueOf(),
-      endtime: dayjs(endTime).valueOf(),
-      total: consultationPerSlot,
-    };
-    await createSlotsApi(body);
+    const snackbar = useContext(SnackBarContext);
+    try {
+      const body = {
+        name: slotName,
+        description,
+        starttime: dayjs(startTime).valueOf(),
+        endtime: dayjs(endTime).valueOf(),
+        total: consultationPerSlot,
+      };
+      const res = await createSlotsApi(body);
+      if (res.status === 200) {
+        snackbar?.setMessage("Slot Created Successfully!");
+        snackbar?.setToastVariant("success");
+      }
+      if (res.status === 500) {
+        snackbar?.setMessage("Failed to create Slot!");
+        snackbar?.setToastVariant("error");
+      }
+    } catch (err) {
+      console.log("Failed to Create Slots", err);
+    }
   };
 
   return (
     <Container sx={{ marginBottom: 4 }} maxWidth="lg">
-      <Grid sx={[styles.formStyle, styles.boxStyle]}>
-        <Typography sx={styles.headerStyle}>Admin Page</Typography>
-      </Grid>
       {/* Create Slot */}
       <Grid className="cardShadow">
         <Grid sx={styles.inputGridStyle}>
