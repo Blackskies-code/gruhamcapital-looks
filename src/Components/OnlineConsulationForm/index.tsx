@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import theme from "../../theme";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -20,6 +20,7 @@ import {
   getScheduleForConsultationApi,
 } from "../../Services/ConsultationService";
 import "./style.css";
+import { SnackBarContext } from "../../Context";
 
 interface slotObj {
   id?: number | string;
@@ -46,19 +47,24 @@ export const OnlineConsulationForm = () => {
     consultationSlotTime[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const snackbar = useContext(SnackBarContext);
 
   const dateHandler = async (event: any) => {
-    const selectedDate = dayjs(event).valueOf();
-    const reqBody = {
-      startTime: selectedDate,
-      endTime: dayjs(event).add(1, "day").valueOf(),
-    };
-    setDate(selectedDate);
-    setLoading(true);
-    const resBody = await getScheduleForConsultationApi(reqBody);
-    setLoading(false);
-    const slotTimes = slotTimesFromData(resBody.data);
-    setConsultationSlotTimes(slotTimes);
+    try {
+      const selectedDate = dayjs(event).valueOf();
+      const reqBody = {
+        startTime: selectedDate,
+        endTime: dayjs(event).add(1, "day").valueOf(),
+      };
+      setDate(selectedDate);
+      setLoading(true);
+      const resBody = await getScheduleForConsultationApi(reqBody);
+      setLoading(false);
+      const slotTimes = slotTimesFromData(resBody.data);
+      setConsultationSlotTimes(slotTimes);
+    } catch (err) {
+      console.log("Error while fetching consultation slots");
+    }
   };
 
   const slotTimesFromData = (dataArr: slotObj[]) => {
@@ -79,7 +85,19 @@ export const OnlineConsulationForm = () => {
       slot_id: slotId,
     };
     // TODO: Add a toast to show success/ fail message
-    await createConsultationApi(body);
+    try {
+      const res = await createConsultationApi(body);
+      if (res.status === 200) {
+        snackbar?.setMessage(`Consultation is Booked, Order Id: ${slotId}`);
+        snackbar?.setToastVariant("success");
+      }
+      if (res.status === 500) {
+        snackbar?.setMessage(`Consultation Booking Failed`);
+        snackbar?.setToastVariant("error");
+      }
+    } catch (err) {
+      console.log("consultation booking failed", err);
+    }
   };
 
   const boxStyle = {

@@ -160,7 +160,7 @@ export const ListSlots = () => {
   const paginationModel = { page: 0, pageSize: 5 };
 
   return (
-    <Grid>
+    <Grid className="cardShadow" sx={{ margin: 2 }}>
       {/* List/Delete Slot */}
       <Grid sx={{ ...styles.inputGridStyle, marginBottom: 0 }}>
         <Typography sx={styles.cardHeaderStyle}>List/ Delete Slot</Typography>
@@ -254,6 +254,7 @@ export const ListSlots = () => {
             border: 0,
             color: "black",
             backgroundColor: "white",
+            margin: 2,
             ...styles.tableClass,
           }}
           slots={{
