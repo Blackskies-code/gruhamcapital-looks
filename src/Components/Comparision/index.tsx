@@ -1,5 +1,6 @@
 import {
   Box,
+  Grid,
   Table,
   TableBody,
   TableCell,
@@ -22,12 +23,12 @@ const Comparison = () => {
       "Processing Fee",
       unicodeRupeeSymbol + " 0 ",
       "0.25% + GST (" +
-      unicodeRupeeSymbol +
-      " 12,500 + " +
-      unicodeRupeeSymbol +
-      " 2,250 = " +
-      unicodeRupeeSymbol +
-      " 14,750 for 50 Lakhs)"
+        unicodeRupeeSymbol +
+        " 12,500 + " +
+        unicodeRupeeSymbol +
+        " 2,250 = " +
+        unicodeRupeeSymbol +
+        " 14,750 for 50 Lakhs)"
     ),
     createData(
       "CERSAI Charges",
@@ -74,6 +75,7 @@ const Comparison = () => {
   const boxStyle = {
     background: theme.palette.secondary.contrastText,
     marginTop: 2,
+    overflowX: "auto",
   };
 
   // const cellFormatForUs = {
@@ -103,42 +105,48 @@ const Comparison = () => {
       >
         Why Us ?
       </Typography>
-      <Table sx={boxStyle} className="cardShadow">
-        <TableHead sx={tableHeaderFormat}>
-          <TableRow>
-            <TableCell sx={styles.tableHeaderLedger}>Feature</TableCell>
-            <TableCell align="right" sx={styles.tableHeaderUs}>
-              Gruham Captial
-            </TableCell>
-            <TableCell align="right" sx={styles.tableHeaderOther}>
-              Others
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.feature}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row" sx={styles.tableCellLedger}>
-                {row.feature}
+      <Grid overflow={"auto"} className="cardShadow">
+        <Table sx={boxStyle}>
+          <TableHead sx={tableHeaderFormat}>
+            <TableRow>
+              <TableCell sx={styles.tableHeaderLedger}>Feature</TableCell>
+              <TableCell align="right" sx={styles.tableHeaderUs}>
+                Gruham Captial
               </TableCell>
-              <TableCell
-                align="right"
-                sx={{
-                  ...styles.tableCellUs,
-                }}
-              >
-                {row.us}
-              </TableCell>
-              <TableCell align="right" sx={styles.tableCellOther}>
-                {row.others}
+              <TableCell align="right" sx={styles.tableHeaderOther}>
+                Others
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow
+                key={row.feature}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell
+                  component="th"
+                  scope="row"
+                  sx={styles.tableCellLedger}
+                >
+                  {row.feature}
+                </TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    ...styles.tableCellUs,
+                  }}
+                >
+                  {row.us}
+                </TableCell>
+                <TableCell align="right" sx={styles.tableCellOther}>
+                  {row.others}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Grid>
     </Box>
   );
 };

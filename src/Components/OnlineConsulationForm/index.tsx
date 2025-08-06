@@ -10,53 +10,94 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import theme from "../../theme";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import getScheduleForConsultation from "../../Services/ConsultationService";
+import {
+  createConsultationApi,
+  getScheduleForConsultationApi,
+} from "../../Services/ConsultationService";
+import "./style.css";
+import { SnackBarContext } from "../../Context";
 
-interface IConsultationSchedule {
-  time: string;
-  availableSlots: string;
-  bookedSlots?: string;
+interface slotObj {
+  id?: number | string;
+  slotName?: string | null;
+  description?: string | null;
+  startTime?: number | null;
+  endTime?: number | null;
+  availability?: number;
+}
+interface consultationSlotTime {
+  startTime: string | number;
+  slot_id: string;
 }
 
 export const OnlineConsulationForm = () => {
   const purposeOfLoansList = ["Mortgage", "Housing"];
-
-  const [purposeOfLoan, setPurposeOfLoan] = useState(0);
-  const [mobileNumber, setMobileNumber] = useState<string>("");
-  const [date, setDate] = useState<string>("");
-  const [consultationSchedule, setConsultationSchedule] = useState<
-    IConsultationSchedule[]
+  const [slotId, setSlotId] = useState("");
+  const [name, setName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState<number>();
+  const [email, setEmail] = useState<string>("");
+  const [purposeOfLoan, setPurposeOfLoan] = useState<string>("");
+  const [, setDate] = useState<number | null>(null);
+  const [consultationSlotTimes, setConsultationSlotTimes] = useState<
+    consultationSlotTime[]
   >([]);
-  const [selectedTime, setSelectedTime] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
-  const handlePurposeOfLoanDropDown = (event: any) => {
-    setPurposeOfLoan(event.target.value);
-  };
-  const mobileNumberHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setMobileNumber(value ? value : "");
-  };
+  const snackbar = useContext(SnackBarContext);
 
   const dateHandler = async (event: any) => {
-    console.log("event date", dayjs(event).format("MM/DD/YYYY"));
-    const selectedDate = dayjs(event).format("MM/DD/YYYY");
-    setDate(selectedDate);
-    setLoading(true);
-    console.log(date)
-    const data = await getScheduleForConsultation();
-    setLoading(false);
-    setConsultationSchedule([...data]);
+    try {
+      const selectedDate = dayjs(event).valueOf();
+      const reqBody = {
+        startTime: selectedDate,
+        endTime: dayjs(event).add(1, "day").valueOf(),
+      };
+      setDate(selectedDate);
+      setLoading(true);
+      const resBody = await getScheduleForConsultationApi(reqBody);
+      setLoading(false);
+      const slotTimes = slotTimesFromData(resBody.data);
+      setConsultationSlotTimes(slotTimes);
+    } catch (err) {
+      console.log("Error while fetching consultation slots");
+    }
   };
 
-  const timeHandler = (event: any) => {
-    console.log("event time", event);
-    setSelectedTime(event.target.value);
+  const slotTimesFromData = (dataArr: slotObj[]) => {
+    return dataArr.map((dataObj: any) => {
+      return {
+        startTime: dayjs(dataObj.startTime).format("hh:mm A"),
+        slot_id: dataObj.id,
+      };
+    });
+  };
+
+  const bookConsultation = async () => {
+    const body = {
+      name,
+      mobile: mobileNumber,
+      email,
+      purpose: purposeOfLoan,
+      slot_id: slotId,
+    };
+    // TODO: Add a toast to show success/ fail message
+    try {
+      const res = await createConsultationApi(body);
+      if (res.status === 200) {
+        snackbar?.setMessage(`Consultation is Booked, Order Id: ${slotId}`);
+        snackbar?.setToastVariant("success");
+      }
+      if (res.status === 500) {
+        snackbar?.setMessage(`Consultation Booking Failed`);
+        snackbar?.setToastVariant("error");
+      }
+    } catch (err) {
+      console.log("consultation booking failed", err);
+    }
   };
 
   const boxStyle = {
@@ -86,7 +127,7 @@ export const OnlineConsulationForm = () => {
   const submitButton = {
     color: theme.palette.secondary.contrastText,
     borderRadius: 15,
-    marginTop: 2,
+    margin: "2px",
     textTransform: "none",
     backgroundColor: theme.palette.secondary.main,
   };
@@ -94,7 +135,6 @@ export const OnlineConsulationForm = () => {
   const buttonPlacement = {
     marginLeft: "auto",
   };
-
 
   const headerStyle = {
     fontSize: 35,
@@ -131,6 +171,8 @@ export const OnlineConsulationForm = () => {
                 placeholder="Name"
                 variant="standard"
                 fullWidth
+                value={name}
+                onChange={(event) => setName(event.target.value)}
               />
             </Grid>
           </Grid>
@@ -145,7 +187,9 @@ export const OnlineConsulationForm = () => {
                 required
                 placeholder="Phone"
                 variant="standard"
-                onChange={mobileNumberHandler}
+                onChange={(event) =>
+                  setMobileNumber(parseInt(event.target.value))
+                }
                 slotProps={{ input: { type: "number" } }}
                 value={mobileNumber}
                 fullWidth
@@ -165,6 +209,8 @@ export const OnlineConsulationForm = () => {
                 placeholder="Email"
                 slotProps={{ input: { type: "email" } }}
                 fullWidth
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
               />
             </Grid>
           </Grid>
@@ -178,14 +224,14 @@ export const OnlineConsulationForm = () => {
               <Select
                 value={purposeOfLoan}
                 label="Purpose Of Loan"
-                onChange={handlePurposeOfLoanDropDown}
+                onChange={(event) => setPurposeOfLoan(event.target.value)}
                 variant="standard"
                 fullWidth
               >
                 {purposeOfLoansList.map((element, ind) => {
                   return (
                     <MenuItem
-                      value={ind}
+                      value={element}
                       key={"purposeDropDown" + ind.toString()}
                     >
                       {element}
@@ -212,24 +258,24 @@ export const OnlineConsulationForm = () => {
             <Grid size={{ md: 7 }}>
               <FormControl>
                 <InputLabel id="demo-simple-select-label">
-                  {consultationSchedule.length
+                  {consultationSlotTimes.length
                     ? "Pick a slot"
                     : "Select the date"}
                 </InputLabel>
                 <Select
-                  value={selectedTime}
+                  value={slotId}
                   label="Time"
-                  onChange={timeHandler}
+                  onChange={(event) => setSlotId(event.target.value)}
                   style={{ width: 160 }}
-                  disabled={!consultationSchedule.length}
+                  disabled={!consultationSlotTimes.length}
                 >
-                  {consultationSchedule?.map((schedule, _) => {
+                  {consultationSlotTimes?.map((schedule, ind) => {
                     return (
                       <MenuItem
-                        value={schedule.time}
-                        key={"date" + schedule.time}
+                        value={schedule.slot_id}
+                        key={`${ind + "date" + schedule.startTime}`}
                       >
-                        {schedule.time}
+                        {schedule.startTime}
                       </MenuItem>
                     );
                   })}
@@ -247,9 +293,16 @@ export const OnlineConsulationForm = () => {
           </Grid>
           <Grid container size={10}>
             <Grid sx={buttonPlacement}>
-              <Button variant="contained" sx={submitButton}>
-                Request Consultation
-              </Button>
+              <div className="button-anim">
+                <Button
+                  className="highlight-button"
+                  variant="contained"
+                  sx={{ ...submitButton, position: "relative", zIndex: 1 }}
+                  onClick={() => bookConsultation()}
+                >
+                  Request Consultation
+                </Button>
+              </div>
             </Grid>
           </Grid>
         </Grid>

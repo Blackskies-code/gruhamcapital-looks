@@ -1,10 +1,10 @@
 import { Grid, Slider, Stack, TextField, Typography } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import theme from "../../theme";
+import theme from "../../../theme";
 import { useEffect, useState } from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 
-export const HomeLoanCalculator = () => {
+export const HomeLoanCalculatorWeb = () => {
   const [tenure, setTenure] = useState<number>(1);
   const [principalAmount, setPrincipalAmount] = useState(20000);
   const [roi, setRoi] = useState(5);
@@ -28,7 +28,7 @@ export const HomeLoanCalculator = () => {
       (principal * monthlyRoi * Math.pow(1 + monthlyRoi, tenureInMonths)) /
       (Math.pow(1 + monthlyRoi, tenureInMonths) - 1);
     setLoanEmi(roundToTwo(emi));
-    setTotalInterest(roundToTwo((emi * tenureInMonths) - principalAmount));
+    setTotalInterest(roundToTwo(emi * tenureInMonths - principalAmount));
   };
 
   const handleTenure = (event: any) => {
@@ -128,13 +128,14 @@ export const HomeLoanCalculator = () => {
     fontSize: 35,
     marginBottom: 5,
   };
-  const containerGrid = {
-    padding: 0,
-  };
 
   return (
-    <Grid container sx={containerGrid}>
-      <Grid size={{ md: 7 }} sx={boxStyle}>
+    <Grid container>
+      {/* Desktop View */}
+      <Grid
+        size={{ md: 7 }}
+        sx={{ display: { xs: "none", md: "block" }, ...boxStyle }}
+      >
         <Typography sx={headerStyle} color={theme.palette.primary.contrastText}>
           Home Loan Calculator
         </Typography>
@@ -249,7 +250,7 @@ export const HomeLoanCalculator = () => {
           </Stack>
         </Grid>
       </Grid>
-      <Grid size={{ md: 5 }}>
+      <Grid size={{ md: 5 }} sx={{ display: { xs: "none", md: "block" } }}>
         <Grid container>
           <PieChart
             colors={[theme.palette.primary.main, theme.palette.secondary.main]}
@@ -276,7 +277,7 @@ export const HomeLoanCalculator = () => {
                 },
               },
             ]}
-            height={400}
+            height={300}
             margin={{ left: 50, right: 50 }}
             slotProps={{
               legend: {
