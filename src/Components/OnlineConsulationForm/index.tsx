@@ -53,8 +53,8 @@ export const OnlineConsulationForm = () => {
     try {
       const selectedDate = dayjs(event).valueOf();
       const reqBody = {
-        startTime: selectedDate,
-        endTime: dayjs(event).add(1, "day").valueOf(),
+        starttime: selectedDate / 1000,
+        endtime: dayjs(event).add(1, "day").valueOf() / 1000,
       };
       setDate(selectedDate);
       setLoading(true);
