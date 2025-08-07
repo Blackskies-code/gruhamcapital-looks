@@ -70,7 +70,9 @@ export const OnlineConsulationForm = () => {
   const slotTimesFromData = (dataArr: slotObj[]) => {
     return dataArr.map((dataObj: any) => {
       return {
-        startTime: dayjs(dataObj.startTime).format("hh:mm A"),
+        startTime: `${dayjs(dataObj.starttime * 1000).format(
+          "hh:mm A"
+        )} - ${dayjs(dataObj.endtime * 1000).format("hh:mm A")}`,
         slot_id: dataObj.id,
       };
     });
