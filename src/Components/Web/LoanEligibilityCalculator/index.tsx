@@ -25,7 +25,7 @@ const LoanEligibilityCalculatorWeb = () => {
   };
 
   const handleInterest = (event: any) => {
-    setInterest(event.target.value);
+    setInterest(event.target.value == 0 ? 1 : event.target.value);
   };
 
   useEffect(() => {
@@ -41,8 +41,7 @@ const LoanEligibilityCalculatorWeb = () => {
   };
 
   const calculateLoanEligibility = () => {
-    let maxEligibleEmi = monthlyNetIncome * 0.65;
-    maxEligibleEmi = monthlyNetIncome - existingEmi;
+    let maxEligibleEmi = monthlyNetIncome - existingEmi;
     // Considering eligibility for loan is 65%
     if (existingEmi > maxEligibleEmi) {
       // if the existing is greater than 65% defaulting the Emi & Loan to 0
@@ -65,7 +64,7 @@ const LoanEligibilityCalculatorWeb = () => {
       // Calculate total Interest Paid
       const totalInterest = totalRepayment - loanAmount;
       setEligibleLoan(roundToTwo(loanAmount));
-      setEligibleEmi(maxEligibleEmi);
+      setEligibleEmi(roundToTwo(maxEligibleEmi * 0.65));
       setCalculatedInterest(roundToTwo(totalInterest));
       setIsEligibleForLoan(true);
     }
